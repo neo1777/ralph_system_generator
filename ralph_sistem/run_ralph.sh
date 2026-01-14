@@ -37,8 +37,17 @@ EOF
 
   # 3. Call the Agent (REAL EXECUTION)
   echo ">> Chiamata a Google Gemini 3 Pro (Preview)..."
-  OUTPUT=$(gcloud genai run --model="gemini-3-pro-preview" < input_prompt.txt)
-  echo "$OUTPUT"
+  if command -v gcloud &> /dev/null && gcloud genai --help &> /dev/null; then
+    OUTPUT=$(gcloud genai run --model="gemini-3-pro-preview" < input_prompt.txt)
+    echo "$OUTPUT"
+  else
+    echo "⚠️ gcloud genai non trovato. Modalità Collaborativa AI attivata."
+    echo "PROMPT GENERATO:"
+    echo "---------------------------------------------------"
+    cat input_prompt.txt
+    echo "---------------------------------------------------"
+    echo "Analizza il compito e rispondi 'y' se i criteri sono soddisfatti."
+  fi
 
   read -p "L'agente ha soddisfatto i criteri? (y/n): " RESULT
   
