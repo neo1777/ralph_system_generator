@@ -1,0 +1,5 @@
+{
+  "name": "Ralph System Generator",
+  "description": "A dashboard to generate the configuration, scripts, and file structures for a Ralph Loop AI orchestration system based on the Ralph System methodology.",
+  "requestFramePermissions": []
+}

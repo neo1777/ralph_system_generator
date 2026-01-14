@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Configurazione Ambiente",
+    "description": "Inizializza struttura e verifica ambiente per 'compliance-check'.",
+    "acceptance_criteria": "Lo script viene eseguito con successo e stampa conferma.",
+    "passes": false
+  },
+  {
+    "id": 2,
+    "title": "Implementazione Logica Core",
+    "description": "Implementa la funzionalità principale: Agisci come Lead Architect/QA. Hai il `README.md` ...",
+    "acceptance_criteria": "Tutti i test passano e la feature funziona come descritto.",
+    "passes": false
+  }
+]
