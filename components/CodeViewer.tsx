@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { GeneratedFile, AppLanguage } from '../types';
 import { Copy, Check, FileText, Download, Package, Image as ImageIcon } from 'lucide-react';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import saveAs from 'file-saver';
 import { getUiText } from '../services/i18n';
 
 interface CodeViewerProps {
   files: GeneratedFile[];
   lang: AppLanguage;
+  onNotification: (message: string, type: 'success' | 'error' | 'info') => void;
 }
 
-export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
+export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang, onNotification }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [copied, setCopied] = useState(false);
   const [zipping, setZipping] = useState(false);
@@ -40,7 +41,8 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
       saveAs(content, "ralph-system.zip");
     } catch (err) {
       console.error("Failed to zip", err);
-      alert(t('err_zip'));
+      // alert(t('err_zip')); // Deprecated
+      onNotification("ZIP Generation Failed: " + (err as any).message, 'error');
     } finally {
       setZipping(false);
     }
