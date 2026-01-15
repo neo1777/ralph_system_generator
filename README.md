@@ -19,7 +19,12 @@ Questa applicazione permette agli sviluppatori di generare configurazioni pronte
     *   **TUI (Terminal UI):** Interfaccia grafica in Python (`curses`) con **gestione robusta degli errori** (file mancanti, JSON corrotto) e feedback visivo dello stato in tempo reale.
 *   **Guida Personalizzata:** Genera un file `INSTRUCTIONS.md` su misura con i comandi esatti per configurare le chiavi API e le dipendenze per l'ambiente scelto.
 *   **Internazionalizzazione 100% (i18n):** Interfaccia utente, preset, file di esempio e **tutto il codice generato** (incluso `INSTRUCTIONS.md`, `ralph_tui.py` e script Bash) sono completamente tradotti in 8 lingue (EN, IT, ES, FR, DE, PT, ZH, JA).
-*   **Download ZIP:** Scarica l'intero pacchetto pronto per essere estratto ed eseguito, con gestione corretta dei file binari.
+*   **Download ZIP Intelligente:** Scarica l'intero pacchetto pronto all'uso con un nome file coerente e sanitizzato basato sul nome del tuo progetto (es. `mio_progetto.zip`). Gestione robusta dei file binari e compatibilità cross-platform.
+*   **User Experience (UX) Ottimizzata:**
+    *   **Rilevamento Lingua Automatico:** L'app si avvia nella lingua del tuo browser (fallback su Italiano).
+    *   **Notifiche Toast:** Feedback visivo immediato per ogni azione (successo/errore).
+    *   **Layout Fluido:** Design responsivo che si adatta naturalmente a qualsiasi schermo senza scroll trap.
+    *   **Reset Automatico:** L'output si resetta al cambio di preset per evitare confusione.
 
 ## 📦 Catalogo Preset
 
@@ -52,15 +57,25 @@ Questi preset caricano automaticamente file "problematici" nel contesto per test
 *   **Spec Compliance:** Verifica la conformità del codice rispetto a README e Design Doc simulati.
 
 ## 🛠️ Come Usare
+### Versione Live (Consigliata)
+Visita semplicemente il sito ufficiale:
+👉 **[https://neo1777.github.io/ralph_system_generator/](https://neo1777.github.io/ralph_system_generator/)**
 
-1.  Scarica il file `index.html`.
-2.  Apri `index.html` nel tuo browser.
-3.  **L'App parte in Italiano e Tema Scuro** (configurabile dall'header).
-4.  **Seleziona un Preset** dal menu a tendina. Vedrai che titolo e descrizione si adattano alla lingua scelta.
-5.  Carica ulteriori file di contesto se necessario.
-6.  Clicca su **Genera**.
-7.  **Leggi il file `INSTRUCTIONS.md`** nell'anteprima per vedere i comandi di setup specifici.
-8.  Clicca su **Download ZIP**.
+### Uso
+1.  **L'App parte nella tua lingua** (rilevata automaticamente) e in Tema Scuro.
+2.  **Seleziona un Preset** dal menu a tendina. Titoli, descrizioni e mock code si adatteranno alla lingua.
+3.  Personalizza il **Nome Progetto** e l'**Obiettivo**.
+4.  Clicca su **Genera Sistema Ralph**.
+5.  Leggi l'anteprima dei file generati nel pannello di destra.
+6.  Clicca su **Scarica ZIP**.
+
+### Sviluppo Locale
+```bash
+git clone https://github.com/neo1777/ralph_system_generator.git
+cd ralph_system_generator
+npm install
+npm run dev
+```
 
 ## ✅ Verifica e QA
 
@@ -80,7 +95,8 @@ Il sistema è stato sottoposto a un rigoroso processo di validazione automatizza
 
 L'applicazione è sviluppata con un approccio "No-Build" moderno per la massima portabilità:
 
-*   **React 19**: Importato via ESM (esm.sh).
+*   **Vite**: Build system moderno e velocissimo.
+*   **React 19**: Componenti funzionali e Hooks.
 *   **Tailwind CSS**: Via CDN con configurazione Dark Mode.
 *   **JSZip & FileSaver**: Generazione ZIP client-side (inclusi file binari).
 *   **TypeScript**: Transpiling in-browser (in development) o pre-compilato.

@@ -3,7 +3,7 @@
 | Documento | Design Tecnico & Specifiche Funzionali |
 | :--- | :--- |
 | **Progetto** | Ralph System Generator (Web Dashboard) |
-| **Versione** | 1.6.0 |
+| **Versione** | 1.6.13 |
 | **Stato** | Implementato |
 
 ## 1. Introduzione e Obiettivi
@@ -12,7 +12,7 @@
 Configurare un "Ralph Loop" richiede non solo boilerplate, ma spesso l'inclusione di documentazione esistente o mockup grafici per dare contesto iniziale all'agente. Inoltre, l'interazione da terminale può risultare fragile se i file di configurazione (`prd.json`) vengono corrotti.
 
 ### 1.2 Soluzione
-Creare un'applicazione web "Single File" che generi il codice, le istruzioni dinamiche e integri automaticamente file di contesto. L'interfaccia generata (TUI) deve essere resiliente agli errori di I/O. **Nuovo in v1.6.0:** L'intero sistema, inclusi i contenuti dei preset e i file di esempio, deve essere completamente localizzabile.
+Creare un'applicazione web "Single File" che generi il codice, le istruzioni dinamiche e integri automaticamente file di contesto. L'interfaccia generata (TUI) deve essere resiliente agli errori di I/O. **Upgrade v1.6.13:** UX completamente rivista (Notifiche Toast, Layout fluido), download ZIP sanitizzato e internazionalizzazione totale (100%).
 
 ## 2. Architettura del Sistema
 
@@ -38,7 +38,9 @@ L'utente seleziona parametri critici e ora può caricare file:
 1.  **Preset Selector (Localizzato):** Menu a tendina che popola automaticamente la configurazione. I titoli e le descrizioni cambiano dinamicamente se l'utente cambia lingua UI.
 2.  **Tool CLI/Model/Goal:** Parametri standard (sovrascritti dal preset se selezionato).
 3.  **Context Files:** Input File multiplo. Supporta testo (append) e immagini (assets).
-4.  **Theme Toggle:** Switch globale per passare dalla modalità Chiara (default) a quella Scura, con persistenza `localStorage`.
+3.  **Context Files:** Input File multiplo. Supporta testo (append) e immagini (assets).
+4.  **Theme/Language:** Switch Dark Mode (default) e Lingua (Auto-detect da browser con fallback manuale).
+5.  **UX Feedback:** Sistema di notifiche Toast per dare feedback immediato su errori (es. "Nome progetto richiesto") o successo.
 
 ### 3.2 Preset Engine & Deep Localization
 Il sistema di preset è stato potenziato per supportare una localizzazione profonda:
@@ -57,6 +59,10 @@ Oltre a `prd.json`, `agents.md` e `INSTRUCTIONS.md`, il sistema ora produce:
 #### 3.3.2 Gestione Environment
 Il sistema riconosce se l'utente è su cloud o locale e adatta i comandi.
 *   **Project IDX:** Genera istruzioni specifiche per `nix build` con flag `flakes` abilitati.
+61: 
+62: #### 3.3.3 Output ZIP
+63: *   **Sanitized Filename:** Il nome del file ZIP scaricato è derivato dal "Nome Progetto" dell'utente, sanitizzato per essere sicuro su ogni file system (es. `My Project!` -> `my_project_.zip`).
+64: *   **Compatibilità JSZip:** Importazione gestita con `esModuleInterop` per evitare errori di runtime.
 
 ### 3.4 Validazione "2026"
 Le istruzioni sono state verificate contro le best practice attuali/previste per i seguenti backend CLI:
@@ -95,6 +101,11 @@ Per garantire la robustezza di una "Single File App" che genera codice critico s
     3.  Mock dell'agente IA.
     4.  Esecuzione effettiva del loop `./run_ralph.sh`.
 *   Risultato: Il loop committa correttamente su Git e aggiorna lo stato dei task in `prd.json`.
+98: 
+99: ### 7.4 Browser Automation (Visual Regression)
+100: *   **Tool:** Subagent Browser (Puppeteer/Playwright like).
+101: *   **Test:** Verifica layout responsive, comportamento sticky/scroll, caricamento preset dinamico, feedback click, e flow di download ZIP su ambiente di produzione.
+102: *   **Risultato:** Layout validato su risoluzioni desktop e mobile, assenza di scroll trap in v1.6.10+.
 
 ## 8. Flusso Dati (Upload)
 
