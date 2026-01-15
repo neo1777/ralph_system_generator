@@ -97,6 +97,7 @@ export default function App() {
       cliTool: prev.cliTool
     }));
     setActivePreset(preset.id);
+    setGeneratedFiles([]); // Reset output on preset change
     setIsPresetDropdownOpen(false);
     showNotification(`Preset "${preset.title}" caricato!`, 'success');
   };
