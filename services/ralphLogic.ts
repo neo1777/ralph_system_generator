@@ -11,19 +11,19 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
   let commentWarning = false;
 
   switch (model) {
-    case AiModel.GOOGLE_GEMINI_3_PRO: modelId = "gemini-3-pro-preview"; break;
-    case AiModel.GOOGLE_GEMINI_3_FLASH: modelId = "gemini-3-flash-preview"; break;
-    case AiModel.GOOGLE_GEMINI_2_5_FLASH: modelId = "gemini-flash-latest"; break;
-    case AiModel.CLAUDE_3_7_SONNET: modelId = "claude-3-7-sonnet-20260224"; break;
-    case AiModel.CLAUDE_3_5_OPUS: modelId = "claude-3-5-opus-latest"; break;
-    case AiModel.CLAUDE_3_5_SONNET: modelId = "claude-3-5-sonnet-latest"; break;
-    case AiModel.OPENAI_O3: modelId = "o3-mini"; break;
-    case AiModel.OPENAI_O1: modelId = "o1"; break;
-    case AiModel.OPENAI_GPT_5: modelId = "gpt-5-preview"; break;
-    case AiModel.OPENAI_GPT_4O: modelId = "gpt-4o"; break;
-    case AiModel.DEEPSEEK_R1: modelId = "deepseek-r1"; break;
-    case AiModel.DEEPSEEK_V3: modelId = "deepseek-v3"; break;
-    case AiModel.LLAMA_4_405B: modelId = "llama-4-405b"; break;
+    case AiModel.GOOGLE_GEMINI_3_PRO: modelId = "gemini-3.0-pro-001"; break;
+    case AiModel.GOOGLE_GEMINI_3_FLASH: modelId = "gemini-3.0-flash-001"; break;
+    case AiModel.GOOGLE_GEMINI_3_DEEP_THINK: modelId = "gemini-3.0-deep-think-001"; break;
+    case AiModel.CLAUDE_OPUS_4_5: modelId = "claude-opus-4.5-20251124"; break;
+    case AiModel.CLAUDE_SONNET_4_5: modelId = "claude-sonnet-4.5-20250929"; break;
+    case AiModel.CLAUDE_HAIKU_4_5: modelId = "claude-haiku-4.5-20251015"; break;
+    case AiModel.OPENAI_GPT_5_5: modelId = "gpt-5.5-turbo"; break;
+    case AiModel.OPENAI_GPT_5_2: modelId = "gpt-5.2-turbo"; break;
+    case AiModel.OPENAI_O3: modelId = "o3-2025-12"; break;
+    case AiModel.DEEPSEEK_V3_2: modelId = "deepseek-v3.2"; break;
+    case AiModel.DEEPSEEK_V3_2_SPECIALE: modelId = "deepseek-v3.2-speciale"; break;
+    case AiModel.LLAMA_4_SCOUT: modelId = "llama-4-scout-109b"; break;
+    case AiModel.LLAMA_4_MAVERICK: modelId = "llama-4-maverick-400b"; break;
     default: modelId = (model as string).toLowerCase().replace(/ /g, "-");
   }
 
@@ -85,8 +85,8 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
       keySetup = t('instr_keys_gcloud_cmd');
       break;
     case CliTool.LLM_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_llm') + "\n1. " + t('instr_setup_llm_step1') + "\n2. " + t('instr_setup_llm_step2');
-      keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_setup_cmd');
+      installSteps = "### " + getUiText(lang, 'tool_llm') + "\n1. Install LLM CLI:\n   pip install llm\n2. Install Plugins:\n   llm install llm-gemini llm-anthropic";
+      keySetup = "### " + t('instr_keys_title') + "\nRun `llm keys set openai` (or equivalent) to setup keys.";
       break;
     case CliTool.OLLAMA:
       installSteps = "### " + getUiText(lang, 'tool_ollama') + "\n" + t('instr_setup_ollama').replace('{modelId}', modelId);
@@ -97,8 +97,8 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
       keySetup = "### " + t('instr_keys_title') + "\nAuthentication is handled via browser login.";
       break;
     case CliTool.OPENAI_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n" + t('instr_setup_openai');
-      keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_openai');
+      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n1. Install Codex CLI:\n   npm install -g @openai/codex";
+      keySetup = "### " + t('instr_keys_title') + "\nRun `codex login` to authenticate.";
       break;
     case CliTool.GCLOUD:
       installSteps = "### " + getUiText(lang, 'tool_gcloud') + "\n1. Install Gemini CLI:\n   npm install -g @google/gemini-cli\n2. Authenticate:\n   gemini";

@@ -421,7 +421,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'habit_tracker_flutter',
         goal: t.p12.goal,
-        model: AiModel.CLAUDE_3_5_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -433,7 +433,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'react-todo-local',
         goal: t.p3.goal,
-        model: AiModel.CLAUDE_3_5_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -445,7 +445,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'express-api-starter',
         goal: t.p4.goal,
-        model: AiModel.CLAUDE_3_5_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -469,7 +469,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'echo-bot-py',
         goal: t.p6.goal,
-        model: AiModel.OPENAI_GPT_4O,
+        model: AiModel.OPENAI_GPT_5_5,
         contextFiles: []
       }
     },
@@ -481,7 +481,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'go-order-service',
         goal: t.p13.goal,
-        model: AiModel.CLAUDE_3_7_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -493,7 +493,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'shop_app_flutter',
         goal: t.p14.goal,
-        model: AiModel.CLAUDE_3_7_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -517,7 +517,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'saas-starter-kit',
         goal: t.p7.goal,
-        model: AiModel.CLAUDE_3_7_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: []
       }
     },
@@ -579,7 +579,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'debug-session',
         goal: t.p18.goal,
-        model: AiModel.CLAUDE_3_7_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: [
           {
             name: 'legacy_script.js',
@@ -598,7 +598,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'sec-audit-express',
         goal: t.p19.goal,
-        model: AiModel.OPENAI_GPT_4O,
+        model: AiModel.OPENAI_GPT_5_5,
         contextFiles: [
           {
             name: 'vulnerable_server.js',
@@ -617,7 +617,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'compliance-check',
         goal: t.p20.goal,
-        model: AiModel.OPENAI_O1,
+        model: AiModel.OPENAI_O3,
         contextFiles: [
           {
             name: 'README.md',
@@ -642,7 +642,7 @@ export const getPresets = (lang: AppLanguage): Preset[] => {
       config: {
         projectName: 'legacy-refactor',
         goal: t.p9.goal,
-        model: AiModel.CLAUDE_3_7_SONNET,
+        model: AiModel.CLAUDE_SONNET_4_5,
         contextFiles: [
           {
             name: 'legacy_script.js',

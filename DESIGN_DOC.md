@@ -72,7 +72,7 @@ Le istruzioni sono state verificate contro le best practice attuali/previste per
 *   **Ollama:** Integrazione locale standard.
 *   **Claude Code (Anthropic):** Workflow completo via `npm install -g @anthropic-ai/claude-code`.
 *   **Gemini CLI (Google):** Esecuzione diretta via `npm install -g @google/gemini-cli`.
-*   **OpenAI Python:** Supporto CLI via libreria ufficiale.
+*   **OpenAI Codex CLI:** Supporto nativo via `npm install -g @openai/codex`.
 
 ## 7. Strategia di Verifica e Risultati
 

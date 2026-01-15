@@ -182,23 +182,23 @@ export default function App() {
     [t('group_google')]: [
       AiModel.GOOGLE_GEMINI_3_PRO,
       AiModel.GOOGLE_GEMINI_3_FLASH,
-      AiModel.GOOGLE_GEMINI_2_5_FLASH
+      AiModel.GOOGLE_GEMINI_3_DEEP_THINK
     ],
     [t('group_anthropic')]: [
-      AiModel.CLAUDE_3_7_SONNET,
-      AiModel.CLAUDE_3_5_OPUS,
-      AiModel.CLAUDE_3_5_SONNET
+      AiModel.CLAUDE_OPUS_4_5,
+      AiModel.CLAUDE_SONNET_4_5,
+      AiModel.CLAUDE_HAIKU_4_5
     ],
     [t('group_openai')]: [
-      AiModel.OPENAI_GPT_5,
-      AiModel.OPENAI_O3,
-      AiModel.OPENAI_O1,
-      AiModel.OPENAI_GPT_4O
+      AiModel.OPENAI_GPT_5_5,
+      AiModel.OPENAI_GPT_5_2,
+      AiModel.OPENAI_O3
     ],
     [t('group_deepseek')]: [
-      AiModel.DEEPSEEK_R1,
-      AiModel.DEEPSEEK_V3,
-      AiModel.LLAMA_4_405B
+      AiModel.DEEPSEEK_V3_2,
+      AiModel.DEEPSEEK_V3_2_SPECIALE,
+      AiModel.LLAMA_4_SCOUT,
+      AiModel.LLAMA_4_MAVERICK
     ]
   };
 

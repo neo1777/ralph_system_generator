@@ -1,17 +1,17 @@
 export enum AiModel {
-  GOOGLE_GEMINI_3_PRO = 'Google Gemini 3 Pro (Preview)',
-  GOOGLE_GEMINI_3_FLASH = 'Google Gemini 3 Flash (Preview)',
-  GOOGLE_GEMINI_2_5_FLASH = 'Google Gemini 2.5 Flash',
-  CLAUDE_3_7_SONNET = 'Claude 3.7 Sonnet',
-  CLAUDE_3_5_OPUS = 'Claude 3.5 Opus',
-  CLAUDE_3_5_SONNET = 'Claude 3.5 Sonnet',
-  OPENAI_GPT_5 = 'OpenAI GPT-5 (Preview)',
+  GOOGLE_GEMINI_3_PRO = 'Google Gemini 3.0 Pro',
+  GOOGLE_GEMINI_3_FLASH = 'Google Gemini 3.0 Flash',
+  GOOGLE_GEMINI_3_DEEP_THINK = 'Google Gemini 3.0 Deep Think',
+  CLAUDE_OPUS_4_5 = 'Claude Opus 4.5',
+  CLAUDE_SONNET_4_5 = 'Claude Sonnet 4.5',
+  CLAUDE_HAIKU_4_5 = 'Claude Haiku 4.5',
+  OPENAI_GPT_5_5 = 'OpenAI GPT-5.5',
+  OPENAI_GPT_5_2 = 'OpenAI GPT-5.2',
   OPENAI_O3 = 'OpenAI o3 (Reasoning)',
-  OPENAI_O1 = 'OpenAI o1',
-  OPENAI_GPT_4O = 'OpenAI GPT-4o',
-  DEEPSEEK_R1 = 'DeepSeek R1 (Distill)',
-  DEEPSEEK_V3 = 'DeepSeek V3',
-  LLAMA_4_405B = 'Llama 4 405B'
+  DEEPSEEK_V3_2 = 'DeepSeek V3.2',
+  DEEPSEEK_V3_2_SPECIALE = 'DeepSeek V3.2 Speciale (Reasoning)',
+  LLAMA_4_SCOUT = 'Llama 4 Scout (109B)',
+  LLAMA_4_MAVERICK = 'Llama 4 Maverick (400B)'
 }
 
 export enum InterfaceType {
