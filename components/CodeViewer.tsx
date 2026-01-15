@@ -89,7 +89,7 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
         >
           {copied ? <Check size={16} /> : <Copy size={16} />}
         </button>
-        <pre className="p-4 text-sm font-mono text-slate-300 overflow-auto h-full max-h-[500px]">
+        <pre className="p-4 text-sm font-mono text-slate-300 overflow-x-auto w-full">
           <code>{files[activeTab].content}</code>
         </pre>
       </div>
