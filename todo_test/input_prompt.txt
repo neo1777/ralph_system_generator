@@ -25,5 +25,5 @@ This file serves as the long-term memory for Ralph. It contains the context, dec
 ## Architecture Gotchas
 <!-- Specific architecture notes discovered during development -->
 - 
-TASK: Initialize the project structure and verify the environment for 'TodoApp'.
-CRITERIA: Script runs successfully and prints a confirmation.
+TASK: Implement the main functionality: Create a modern Todo List app with HTML, CSS and JS. Features: add, delete, mark...
+CRITERIA: All tests pass and the main feature works as described.
