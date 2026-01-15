@@ -9,9 +9,10 @@ interface CodeViewerProps {
   files: GeneratedFile[];
   lang: AppLanguage;
   onNotification: (message: string, type: 'success' | 'error' | 'info') => void;
+  projectName?: string;
 }
 
-export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang, onNotification }) => {
+export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang, onNotification, projectName }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [copied, setCopied] = useState(false);
   const [zipping, setZipping] = useState(false);
@@ -38,7 +39,8 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang, onNotificat
         }
       });
       const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "ralph-system.zip");
+      const safeName = (projectName || 'ralph-system').replace(/[^a-z0-9\-_]/gi, '_').toLowerCase();
+      saveAs(content, `${safeName}.zip`);
     } catch (err) {
       console.error("Failed to zip", err);
       // alert(t('err_zip')); // Deprecated
