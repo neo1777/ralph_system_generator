@@ -16,7 +16,7 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "moduleDetection": "force",
     "allowJs": true,

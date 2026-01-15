@@ -1,8 +1,9 @@
 {
   "name": "ralph-system-generator",
   "private": true,
-  "version": "0.0.0",
-  "author": "Neo1777",
+  "version": "1.6.0",
+  "description": "Recursive Agent Loop with Persistent History (Ralph) System Generator",
+  "author": "Neo1777 <neo1777@example.com>",
   "type": "module",
   "main": "main.js",
   "scripts": {
