@@ -64,10 +64,39 @@ Le istruzioni sono state verificate contro le best practice attuali/previste per
 *   **Project IDX (Nix):** Integrazione nativa environment. Comando esatto:
     `nix build --extra-experimental-features 'nix-command flakes' -o .idx/result idx dev.nix`
 *   **Ollama:** Integrazione locale standard.
-*   **Claude CLI:** Supporto CLI ufficiale Anthropic.
+*   **Claude Code (Anthropic):** Workflow completo via `npm install -g @anthropic-ai/claude-code`.
+*   **Gemini CLI (Google):** Esecuzione diretta via `npm install -g @google/gemini-cli`.
 *   **OpenAI Python:** Supporto CLI via libreria ufficiale.
 
-## 4. Flusso Dati (Upload)
+## 7. Strategia di Verifica e Risultati
+
+Per garantire la robustezza di una "Single File App" che genera codice critico su cui gli utenti basano il loro workflow, è stato implementato un sistema di verifica a più livelli.
+
+### 7.1 Livelli di Test
+1.  **Level 1: Structural Integrity (Headless)**
+    *   Script: `scripts/verify_ralph.ts`
+    *   Check: Esistenza file critici (`prd.json`, `agents.md`), validità JSON, generazione corretta asset binari (immagini).
+2.  **Level 2: Localization & Coherence**
+    *   Check: Verifica che le chiavi i18n critiche (es. titolo PRD, header istruzioni) corrispondano alla lingua di output selezionata (es. "Installazione" vs "Installation").
+3.  **Level 3: Ralph Compliance**
+    *   Check: Analisi statica del Prompt di Sistema per garantire la presenza delle "Core Rules" (Tabula Rasa, Atomic Changes).
+    *   *Bug Trovato/Fixato:* I modelli standard (Non-Reasoning) inizialmente non ricevevano le regole di contesto fresco. Fixato in v1.6.0.
+
+### 7.2 Stress Testing (Fuzzing)
+*   Script: `scripts/stress_test_ralph.ts`
+*   Metodologia: **500 Iterazioni** con input stocastici (nomi progetto Unicode, emoji, caratteri di escape, selezioni enum casuali).
+*   Risultato: Nessun crash lato generatore.
+
+### 7.3 End-to-End Simulation
+*   Script: `scripts/final_e2e_test.ts`
+*   Procedura:
+    1.  Generazione "Clean Room" di un sistema.
+    2.  Esecuzione automatizzata dei comandi utente (`git init`, `chmod +x`).
+    3.  Mock dell'agente IA.
+    4.  Esecuzione effettiva del loop `./run_ralph.sh`.
+*   Risultato: Il loop committa correttamente su Git e aggiorna lo stato dei task in `prd.json`.
+
+## 8. Flusso Dati (Upload)
 
 1.  **Upload:** Utente seleziona `docs.txt` e `mockup.png`.
 2.  **App.tsx:** `FileReader` legge `docs.txt` come stringa e `mockup.png` come DataURL. Salva nello stato `config`.
@@ -76,9 +105,9 @@ Le istruzioni sono state verificate contro le best practice attuali/previste per
 5.  **Process Image:** `mockup.png` (DataURL) viene convertito in Blob binario e aggiunto all'array `files` con path `assets/mockup.png`.
 6.  **Zip:** JSZip impacchetta tutto.
 
-## 5. Sicurezza
+## 9. Sicurezza
 Le istruzioni spiegano come settare le chiavi API. I file caricati vengono processati **solo nel browser** dell'utente e non vengono mai inviati a nessun server remoto.
 
-## 6. Futuri Sviluppi
+## 10. Futuri Sviluppi
 *   Rilevamento automatico dell'OS utente (UserAgent).
 *   Integrazione WebContainer per esecuzione live.

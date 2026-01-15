@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Ecco il codice per la Todo List richiesta:"
+echo "FILENAME: index.html"
+echo \"<!DOCTYPE html><html><head><title>Todo Ralph</title><link rel=\\\"stylesheet\\\" href=\\\"style.css\\\"></head><body><div class=\\\"container\\\"><h1>Todo Ralph</h1><input type=\\\"text\\\" id=\\\"todoInput\\\" placeholder=\\\"Cosa c è da fare?\\\"><button onclick=\\\"addTodo()\\\">Aggiungi</button><ul id=\\\"todoList\\\"></ul></div><script src=\\\"script.js\\\"></script></body></html>\"
+echo "FILENAME: style.css"
+echo \"body { font-family: sans-serif; background: #222; color: #fff; display: flex; justify-content: center; padding: 20px; } .container { background: #333; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 300px; } input { width: 70%; padding: 8px; border: none; border-radius: 4px; } button { padding: 8px; margin-left: 5px; cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 4px; } ul { list-style: none; padding: 0; margin-top: 20px; } li { background: #444; margin-bottom: 5px; padding: 8px; border-radius: 4px; display: flex; justify-content: space-between; } .delete { color: #ff5555; cursor: pointer; }\"
+echo "FILENAME: script.js"
+echo \"function addTodo() { const input = document.getElementById(\\\"todoInput\\\"); const val = input.value; if (!val) return; const li = document.createElement(\\\"li\\\"); li.innerHTML = val + <span class=\\\"delete\\\" onclick=\\\"this.parentElement.remove()\\\"> ✖</span>; document.getElementById(\\\"todoList\\\").appendChild(li); input.value = \\\"\\\"; }\"

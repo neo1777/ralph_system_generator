@@ -37,24 +37,17 @@ EOF
 
   # 3. Call the Agent (REAL EXECUTION)
   echo ">> Chiamata a Google Gemini 3 Pro (Preview)..."
-  if command -v gcloud &> /dev/null && gcloud genai --help &> /dev/null; then
-    OUTPUT=$(gcloud genai run --model="gemini-3-pro-preview" < input_prompt.txt)
-    echo "$OUTPUT"
-  else
-    echo "⚠️ gcloud genai non trovato. Modalità Collaborativa AI attivata."
-    echo "PROMPT GENERATO:"
-    echo "---------------------------------------------------"
-    cat input_prompt.txt
-    echo "---------------------------------------------------"
-    echo "Analizza il compito e rispondi 'y' se i criteri sono soddisfatti."
-  fi
+  OUTPUT=$(gcloud genai run --model="gemini-3-pro-preview" < input_prompt.txt)
+  echo "$OUTPUT"
 
   read -p "L'agente ha soddisfatto i criteri? (y/n): " RESULT
   
   if [ "$RESULT" == "y" ]; then
     echo "✨ Compito segnato come SUCCESSO."
+    git add .
+    git commit -m "Ralph: Completed Task $TASK_ID"
     tmp=$(mktemp)
-    jq "map(if .id == $TASK_ID then .passes = true else . then end)" $PRD_FILE > "$tmp" && mv "$tmp" $PRD_FILE
+    jq "map(if .id == $TASK_ID then .passes = true else . end)" $PRD_FILE > "$tmp" && mv "$tmp" $PRD_FILE
     echo "Iter $(date): Compito Completato $TASK_ID" >> $PROGRESS_FILE
   else
     echo "❌ Compito FALLITO. Riprovo..."

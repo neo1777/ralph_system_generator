@@ -11,6 +11,6 @@
     "title": "Core Logic Implementation",
     "description": "Implement the main functionality: Create a modern Todo List app with HTML, CSS and JS. Features: add, delete, mark...",
     "acceptance_criteria": "All tests pass and the main feature works as described.",
-    "passes": false
+    "passes": true
   }
 ]

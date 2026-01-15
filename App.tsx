@@ -86,28 +86,28 @@ export default function App() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles: ContextFile[] = [];
-      const filesArray = Array.from(e.target.files);
+      const filesArray = Array.from(e.target.files) as File[];
 
-      filesArray.forEach(file => {
+      filesArray.forEach((file: File) => {
         const reader = new FileReader();
         const isImage = file.type.startsWith('image/');
-        
+
         reader.onload = (event) => {
           if (event.target?.result) {
-             newFiles.push({
-               name: file.name,
-               type: file.type,
-               content: event.target.result as string,
-               isImage: isImage
-             });
-             
-             // Update state only after reading (simple debounce-ish logic for this example)
-             if (newFiles.length === filesArray.length) {
-               setConfig(prev => ({
-                 ...prev,
-                 contextFiles: [...prev.contextFiles, ...newFiles]
-               }));
-             }
+            newFiles.push({
+              name: file.name,
+              type: file.type,
+              content: event.target.result as string,
+              isImage: isImage
+            });
+
+            // Update state only after reading (simple debounce-ish logic for this example)
+            if (newFiles.length === filesArray.length) {
+              setConfig(prev => ({
+                ...prev,
+                contextFiles: [...prev.contextFiles, ...newFiles]
+              }));
+            }
           }
         };
 
@@ -117,7 +117,7 @@ export default function App() {
           reader.readAsText(file);
         }
       });
-      
+
       // Reset input
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
@@ -136,48 +136,48 @@ export default function App() {
     // Note: For DataURL images, we might need conversion, but file-saver handles blobs well. 
     // If it's a dataURL string, we need to convert it back to blob if we want 'clean' download, 
     // or just let the browser handle the data URI.
-    
+
     // Simple download logic for text/base64
     if (file.isImage) {
-        saveAs(file.content, file.name);
+      saveAs(file.content, file.name);
     } else {
-        saveAs(blob, file.name);
+      saveAs(blob, file.name);
     }
   };
 
   const t = (key: any) => getUiText(config.uiLanguage, key);
-  
+
   const getDifficultyLabel = (diff: string) => {
-      switch(diff) {
-          case 'Beginner': return t('diffBeginner');
-          case 'Intermediate': return t('diffIntermediate');
-          case 'Advanced': return t('diffAdvanced');
-          case 'Expert': return t('diffExpert');
-          default: return diff;
-      }
+    switch (diff) {
+      case 'Beginner': return t('diffBeginner');
+      case 'Intermediate': return t('diffIntermediate');
+      case 'Advanced': return t('diffAdvanced');
+      case 'Expert': return t('diffExpert');
+      default: return diff;
+    }
   };
 
   const selectedPresetInfo = presets.find(p => p.id === activePreset);
 
   // Group models for better UI
   const groupedModels = {
-    "Google Gemini": [
+    [t('group_google')]: [
       AiModel.GOOGLE_GEMINI_3_PRO,
       AiModel.GOOGLE_GEMINI_3_FLASH,
       AiModel.GOOGLE_GEMINI_2_5_FLASH
     ],
-    "Anthropic": [
+    [t('group_anthropic')]: [
       AiModel.CLAUDE_3_7_SONNET,
       AiModel.CLAUDE_3_5_OPUS,
       AiModel.CLAUDE_3_5_SONNET
     ],
-    "OpenAI": [
+    [t('group_openai')]: [
       AiModel.OPENAI_GPT_5,
       AiModel.OPENAI_O3,
       AiModel.OPENAI_O1,
       AiModel.OPENAI_GPT_4O
     ],
-    "DeepSeek / Meta": [
+    [t('group_deepseek')]: [
       AiModel.DEEPSEEK_R1,
       AiModel.DEEPSEEK_V3,
       AiModel.LLAMA_4_405B
@@ -200,46 +200,46 @@ export default function App() {
               <p className="text-xs text-slate-500 dark:text-slate-400">{t('subTitle')}</p>
             </div>
           </div>
-          
+
           {/* Language & Theme Selectors */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-end sm:items-center">
-            
+
             {/* Theme Toggle */}
-            <button 
+            <button
               onClick={toggleTheme}
               className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
               title={theme === 'light' ? t('themeDark') : t('themeLight')}
             >
-               {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 
             <div className="flex items-center gap-2">
-               <Globe size={16} className="text-slate-400" />
-               <select 
-                  name="uiLanguage"
-                  value={config.uiLanguage}
-                  onChange={handleInputChange}
-                  className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-200"
-                  title={t('uiLang')}
-               >
-                 {Object.values(AppLanguage).map(lang => (
-                   <option key={lang} value={lang} className="dark:bg-slate-900">{lang} (UI)</option>
-                 ))}
-               </select>
+              <Globe size={16} className="text-slate-400" />
+              <select
+                name="uiLanguage"
+                value={config.uiLanguage}
+                onChange={handleInputChange}
+                className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-200"
+                title={t('uiLang')}
+              >
+                {Object.values(AppLanguage).map(lang => (
+                  <option key={lang} value={lang} className="dark:bg-slate-900">{lang} (UI)</option>
+                ))}
+              </select>
             </div>
             <div className="flex items-center gap-2">
-               <span className="text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1 rounded">{t('lbl_code')}</span>
-               <select 
-                  name="outputLanguage"
-                  value={config.outputLanguage}
-                  onChange={handleInputChange}
-                  className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-200"
-                  title={t('outputLang')}
-               >
-                 {Object.values(AppLanguage).map(lang => (
-                   <option key={lang} value={lang} className="dark:bg-slate-900">{lang}</option>
-                 ))}
-               </select>
+              <span className="text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1 rounded">{t('lbl_code')}</span>
+              <select
+                name="outputLanguage"
+                value={config.outputLanguage}
+                onChange={handleInputChange}
+                className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-200"
+                title={t('outputLang')}
+              >
+                {Object.values(AppLanguage).map(lang => (
+                  <option key={lang} value={lang} className="dark:bg-slate-900">{lang}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -247,18 +247,18 @@ export default function App() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* Left Column: Configuration Form */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 transition-colors duration-300">
-              
+
               {/* Presets Section (New Dropdown UI) */}
               <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800 relative z-20">
                 <div className="flex items-center gap-2 mb-3 text-slate-800 dark:text-slate-200">
                   <Library size={20} className="text-indigo-600 dark:text-indigo-400" />
                   <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{t('presetsTitle')}</h2>
                 </div>
-                
+
                 {/* Dropdown Trigger */}
                 <button
                   onClick={() => setIsPresetDropdownOpen(!isPresetDropdownOpen)}
@@ -271,12 +271,12 @@ export default function App() {
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-slate-800 dark:text-slate-100 truncate">{selectedPresetInfo.title}</span>
                         <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full shrink-0
-                             ${selectedPresetInfo.difficulty === 'Beginner' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 
-                               selectedPresetInfo.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 
-                               selectedPresetInfo.difficulty === 'Advanced' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                               'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                             }`}>
-                            {getDifficultyLabel(selectedPresetInfo.difficulty)}
+                             ${selectedPresetInfo.difficulty === 'Beginner' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                            selectedPresetInfo.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                              selectedPresetInfo.difficulty === 'Advanced' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
+                                'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                          }`}>
+                          {getDifficultyLabel(selectedPresetInfo.difficulty)}
                         </span>
                       </div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{selectedPresetInfo.description}</p>
@@ -294,42 +294,42 @@ export default function App() {
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setIsPresetDropdownOpen(false)}></div>
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-40 max-h-[400px] overflow-y-auto overflow-x-hidden">
-                       <div className="p-2 space-y-1">
-                         {presets.map(preset => (
-                           <button
-                              key={preset.id}
-                              onClick={() => {
-                                handleApplyPreset(preset);
-                                setIsPresetDropdownOpen(false);
-                              }}
-                              className={`w-full flex items-start p-3 rounded-lg text-left transition-colors relative
-                                ${activePreset === preset.id 
-                                  ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800' 
-                                  : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border border-transparent'
-                                }`}
-                           >
-                              <div className="flex-1 min-w-0 pr-2">
-                                <div className="flex items-center gap-2">
-                                  <span className={`text-sm font-semibold ${activePreset === preset.id ? 'text-indigo-900 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'}`}>
-                                    {preset.title}
-                                  </span>
-                                  <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded
-                                     ${preset.difficulty === 'Beginner' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 
-                                       preset.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 
-                                       preset.difficulty === 'Advanced' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' :
-                                       'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                                     }`}>
-                                    {getDifficultyLabel(preset.difficulty)}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{preset.description}</p>
+                      <div className="p-2 space-y-1">
+                        {presets.map(preset => (
+                          <button
+                            key={preset.id}
+                            onClick={() => {
+                              handleApplyPreset(preset);
+                              setIsPresetDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-start p-3 rounded-lg text-left transition-colors relative
+                                ${activePreset === preset.id
+                                ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800'
+                                : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border border-transparent'
+                              }`}
+                          >
+                            <div className="flex-1 min-w-0 pr-2">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm font-semibold ${activePreset === preset.id ? 'text-indigo-900 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'}`}>
+                                  {preset.title}
+                                </span>
+                                <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded
+                                     ${preset.difficulty === 'Beginner' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
+                                    preset.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
+                                      preset.difficulty === 'Advanced' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' :
+                                        'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                                  }`}>
+                                  {getDifficultyLabel(preset.difficulty)}
+                                </span>
                               </div>
-                              {activePreset === preset.id && (
-                                <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 shrink-0 mt-1" />
-                              )}
-                           </button>
-                         ))}
-                       </div>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{preset.description}</p>
+                            </div>
+                            {activePreset === preset.id && (
+                              <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 shrink-0 mt-1" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </>
                 )}
@@ -353,7 +353,7 @@ export default function App() {
                     value={config.projectName}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 dark:text-slate-100 placeholder-slate-400"
-                    placeholder="e.g. MySuperApp"
+                    placeholder={t('placeholder_project')}
                   />
                 </div>
 
@@ -378,56 +378,56 @@ export default function App() {
 
                 {/* File Upload Context */}
                 <div>
-                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      {t('uploadLabel')}
-                   </label>
-                   <div 
-                     onClick={() => fileInputRef.current?.click()}
-                     className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-4 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex flex-col items-center justify-center gap-2"
-                   >
-                      <Upload size={24} className="text-slate-400" />
-                      <span className="text-sm text-slate-600 dark:text-slate-400">{t('uploadHelp')}</span>
-                      <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileUpload} 
-                        multiple 
-                        className="hidden" 
-                      />
-                   </div>
-                   
-                   {/* File List */}
-                   {config.contextFiles.length > 0 && (
-                     <div className="mt-3 space-y-2">
-                       <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">{config.contextFiles.length} {t('filesAttached')}</p>
-                       <div className="flex flex-col gap-2">
-                         {config.contextFiles.map((file, idx) => (
-                           <div key={idx} className="flex items-center justify-between bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 text-sm group">
-                             <div className="flex items-center gap-2 overflow-hidden">
-                               {file.isImage ? <ImageIcon size={16} className="text-purple-500 shrink-0" /> : <FileIcon size={16} className="text-blue-500 shrink-0" />}
-                               <span className="truncate text-slate-700 dark:text-slate-200 font-medium" title={file.name}>{file.name}</span>
-                             </div>
-                             <div className="flex items-center gap-1 shrink-0">
-                               <button 
-                                  onClick={(e) => { e.stopPropagation(); downloadContextFile(file); }}
-                                  className="p-1 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded"
-                                  title={t('tip_download')}
-                               >
-                                 <Download size={14} />
-                               </button>
-                               <button 
-                                  onClick={(e) => { e.stopPropagation(); removeFile(idx); }} 
-                                  className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded"
-                                  title={t('tip_remove')}
-                               >
-                                 <X size={14} />
-                               </button>
-                             </div>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   )}
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    {t('uploadLabel')}
+                  </label>
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-4 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex flex-col items-center justify-center gap-2"
+                  >
+                    <Upload size={24} className="text-slate-400" />
+                    <span className="text-sm text-slate-600 dark:text-slate-400">{t('uploadHelp')}</span>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      multiple
+                      className="hidden"
+                    />
+                  </div>
+
+                  {/* File List */}
+                  {config.contextFiles.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">{config.contextFiles.length} {t('filesAttached')}</p>
+                      <div className="flex flex-col gap-2">
+                        {config.contextFiles.map((file, idx) => (
+                          <div key={idx} className="flex items-center justify-between bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 text-sm group">
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              {file.isImage ? <ImageIcon size={16} className="text-purple-500 shrink-0" /> : <FileIcon size={16} className="text-blue-500 shrink-0" />}
+                              <span className="truncate text-slate-700 dark:text-slate-200 font-medium" title={file.name}>{file.name}</span>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <button
+                                onClick={(e) => { e.stopPropagation(); downloadContextFile(file); }}
+                                className="p-1 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded"
+                                title={t('tip_download')}
+                              >
+                                <Download size={14} />
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
+                                className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded"
+                                title={t('tip_remove')}
+                              >
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* AI Model */}
@@ -457,10 +457,10 @@ export default function App() {
                   </div>
                   <div className="mt-2 flex gap-2">
                     {config.model.includes('Reasoning') || config.model.includes('o1') || config.model.includes('R1') ? (
-                       <p className="text-xs text-purple-600 dark:text-purple-400 flex items-center gap-1">
-                         <Cpu size={12} />
-                         {t('modelHelp')}
-                       </p>
+                      <p className="text-xs text-purple-600 dark:text-purple-400 flex items-center gap-1">
+                        <Cpu size={12} />
+                        {t('modelHelp')}
+                      </p>
                     ) : (
                       <p className="text-xs text-slate-500 dark:text-slate-400">
                       </p>
@@ -486,11 +486,11 @@ export default function App() {
                       ))}
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                       <Terminal size={16} className="text-slate-400" />
+                      <Terminal size={16} className="text-slate-400" />
                     </div>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                     {t('cliToolHelp')}
+                    {t('cliToolHelp')}
                   </p>
                 </div>
 
@@ -505,11 +505,10 @@ export default function App() {
                         key={type}
                         type="button"
                         onClick={() => setConfig(prev => ({ ...prev, interfaceType: type }))}
-                        className={`px-3 py-2 text-sm border rounded-lg transition-all text-left ${
-                          config.interfaceType === type
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500'
-                            : 'border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
-                        }`}
+                        className={`px-3 py-2 text-sm border rounded-lg transition-all text-left ${config.interfaceType === type
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500'
+                          : 'border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
+                          }`}
                       >
                         {getInterfaceLabel(config.uiLanguage, type)}
                       </button>
@@ -519,19 +518,19 @@ export default function App() {
 
                 {/* Capabilities */}
                 <div className="pt-2">
-                   <label className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-                      <input 
-                        type="checkbox"
-                        name="includeDevBrowser"
-                        checked={config.includeDevBrowser}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700"
-                      />
-                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('devBrowser')}</span>
-                   </label>
-                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 pl-1">
-                     {t('devBrowserHelp')}
-                   </p>
+                  <label className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <input
+                      type="checkbox"
+                      name="includeDevBrowser"
+                      checked={config.includeDevBrowser}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700"
+                    />
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('devBrowser')}</span>
+                  </label>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 pl-1">
+                    {t('devBrowserHelp')}
+                  </p>
                 </div>
               </div>
 
@@ -574,7 +573,7 @@ export default function App() {
                     {generatedFiles.length} {t('filesCreated')}
                   </span>
                 </div>
-                <CodeViewer files={generatedFiles} />
+                <CodeViewer files={generatedFiles} lang={config.uiLanguage} />
               </div>
             ) : (
               <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500">

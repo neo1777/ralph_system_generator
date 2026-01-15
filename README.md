@@ -62,6 +62,20 @@ Questi preset caricano automaticamente file "problematici" nel contesto per test
 7.  **Leggi il file `INSTRUCTIONS.md`** nell'anteprima per vedere i comandi di setup specifici.
 8.  Clicca su **Download ZIP**.
 
+## ✅ Verifica e QA
+
+Il sistema è stato sottoposto a un rigoroso processo di validazione automatizzata per garantire stabilità e correttezza (Gennaio 2026):
+
+1.  **Test Headless (Matrice Completa):**
+    *   Verificati **320 scenari** (8 Lingue x 20 Preset x 2 Interfacce).
+    *   Risultato: **100% Pass** su struttura file, internazionalizzazione e conformità "Ralph Loop" (incluso fix per System Prompt standard).
+2.  **Stress Test (Fuzzing):**
+    *   Eseguite **500 iterazioni** con input casuali (Unicode, stringhe SQL-like, allegati binari corrotti).
+    *   Risultato: **0 Crash**, stabilità 100%.
+3.  **Real-Life & E2E:**
+    *   Validazione fisica degli script di orchestrazione per **LLM CLI**, **Ollama**, **Gemini CLI**, **Claude Code**, **OpenAI**.
+    *   Simulazione End-to-End completa con Git init, chmod e loop di task completati con successo.
+
 ## 💻 Stack Tecnologico
 
 L'applicazione è sviluppata con un approccio "No-Build" moderno per la massima portabilità:

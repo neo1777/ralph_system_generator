@@ -1,0 +1,10 @@
+[PROMPT DI SISTEMA RALPH]
+Progetto: csv-cleaner-bot
+Obiettivo: Scrivi uno script Python usando Pandas che legge un file CSV chiamato "data.csv". Deve: 1) Rimuovere le righe con valori mancanti, 2) Convertire le colonne data in formato ISO, 3) Esportare il risultato in "clean_data.json". Aggiungi gestione errori.
+Modello: Claude 3.5 Sonnet (claude-3-5-sonnet-latest)
+Regole Fondamentali:
+1. "Inizia fresco ogni volta."
+2. "Fai modifiche atomiche."
+3. "Componi la conoscenza."
+4. "Verifica il tuo output."
+

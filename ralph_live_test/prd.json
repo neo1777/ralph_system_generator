@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Configurazione Ambiente",
+    "description": "Inizializza struttura e verifica ambiente per 'csv-cleaner-bot'.",
+    "acceptance_criteria": "Lo script viene eseguito con successo e stampa conferma.",
+    "passes": false
+  },
+  {
+    "id": 2,
+    "title": "Implementazione Logica Core",
+    "description": "Implementa la funzionalità principale: Scrivi uno script Python usando Pandas che legge un file CSV chiamato \"data.csv\"...",
+    "acceptance_criteria": "Tutti i test passano e la feature funziona come descritto.",
+    "passes": false
+  }
+]

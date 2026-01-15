@@ -4,7 +4,7 @@
     "title": "Environment Setup",
     "description": "Initialize the project structure and verify the environment for 'HelloWorldApp'.",
     "acceptance_criteria": "Script runs successfully and prints a confirmation.",
-    "passes": true
+    "passes": false
   },
   {
     "id": 2,
