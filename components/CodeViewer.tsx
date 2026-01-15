@@ -29,16 +29,13 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
     setZipping(true);
     try {
       const zip = new JSZip();
-
       files.forEach(file => {
-        // JSZip handles paths automatically (e.g. ".idx/dev.nix")
         if (file.binaryData) {
           zip.file(file.filename, file.binaryData);
         } else {
           zip.file(file.filename, file.content);
         }
       });
-
       const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, "ralph-system.zip");
     } catch (err) {
@@ -53,7 +50,6 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col h-full transition-colors duration-300">
-      {/* Tab Header with ZIP Action */}
       <div className="bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-2 flex items-center justify-between">
         <div className="flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
           {files.map((file, idx) => (
@@ -70,7 +66,6 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
             </button>
           ))}
         </div>
-
         <div className="pl-2 border-l border-slate-300 dark:border-slate-600">
           <button
             onClick={handleDownloadZip}
@@ -83,11 +78,9 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files, lang }) => {
           </button>
         </div>
       </div>
-
       <div className="p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">{files[activeTab].description}</h3>
       </div>
-
       <div className="relative flex-grow bg-slate-900 group">
         <button
           onClick={handleCopy}

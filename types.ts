@@ -1,21 +1,14 @@
 export enum AiModel {
-  // Google
   GOOGLE_GEMINI_3_PRO = 'Google Gemini 3 Pro (Preview)',
   GOOGLE_GEMINI_3_FLASH = 'Google Gemini 3 Flash (Preview)',
   GOOGLE_GEMINI_2_5_FLASH = 'Google Gemini 2.5 Flash',
-  
-  // Anthropic
   CLAUDE_3_7_SONNET = 'Claude 3.7 Sonnet',
   CLAUDE_3_5_OPUS = 'Claude 3.5 Opus',
   CLAUDE_3_5_SONNET = 'Claude 3.5 Sonnet',
-  
-  // OpenAI
   OPENAI_GPT_5 = 'OpenAI GPT-5 (Preview)',
   OPENAI_O3 = 'OpenAI o3 (Reasoning)',
   OPENAI_O1 = 'OpenAI o1',
   OPENAI_GPT_4O = 'OpenAI GPT-4o',
-  
-  // Open Weights / DeepSeek
   DEEPSEEK_R1 = 'DeepSeek R1 (Distill)',
   DEEPSEEK_V3 = 'DeepSeek V3',
   LLAMA_4_405B = 'Llama 4 405B'
@@ -50,7 +43,7 @@ export enum AppLanguage {
 export interface ContextFile {
   name: string;
   type: string;
-  content: string; // Text content or Base64 DataURL for images
+  content: string;
   isImage: boolean;
 }
 
@@ -69,7 +62,7 @@ export interface RalphConfig {
 export interface GeneratedFile {
   filename: string;
   language: string;
-  content: string; // Text representation for viewer
-  binaryData?: Blob; // Actual data for ZIP if binary
+  content: string;
+  binaryData?: Blob;
   description: string;
 }

@@ -17,7 +17,6 @@ export default function App() {
     interfaceType: InterfaceType.BASH_BASIC,
     cliTool: CliTool.MANUAL,
     includeDevBrowser: true,
-    // CHANGED: Default Language set to Italian
     uiLanguage: AppLanguage.IT,
     outputLanguage: AppLanguage.IT,
     contextFiles: []
@@ -28,19 +27,15 @@ export default function App() {
   const [isPresetDropdownOpen, setIsPresetDropdownOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get Translated Presets based on current UI language
   const presets = useMemo(() => getPresets(config.uiLanguage), [config.uiLanguage]);
 
-  // Theme State
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      // CHANGED: Default Fallback to 'dark' if no storage found
       return (localStorage.getItem('theme') as Theme) || 'dark';
     }
     return 'dark';
   });
 
-  // Apply Theme
   useEffect(() => {
     const root = window.document.documentElement;
     if (theme === 'dark') {
@@ -64,14 +59,12 @@ export default function App() {
     setConfig(prev => ({
       ...prev,
       ...preset.config,
-      // Ensure we keep user settings for Language/Interface if not overridden
       uiLanguage: prev.uiLanguage,
       outputLanguage: prev.outputLanguage,
       interfaceType: prev.interfaceType,
       cliTool: prev.cliTool
     }));
     setActivePreset(preset.id);
-    // Clear success feedback after 2s
     setTimeout(() => setActivePreset(null), 2000);
   };
 
@@ -101,7 +94,6 @@ export default function App() {
               isImage: isImage
             });
 
-            // Update state only after reading (simple debounce-ish logic for this example)
             if (newFiles.length === filesArray.length) {
               setConfig(prev => ({
                 ...prev,
@@ -118,7 +110,6 @@ export default function App() {
         }
       });
 
-      // Reset input
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -131,13 +122,7 @@ export default function App() {
   };
 
   const downloadContextFile = (file: ContextFile) => {
-    // Helper to download content from memory
     const blob = new Blob([file.content], { type: file.type });
-    // Note: For DataURL images, we might need conversion, but file-saver handles blobs well. 
-    // If it's a dataURL string, we need to convert it back to blob if we want 'clean' download, 
-    // or just let the browser handle the data URI.
-
-    // Simple download logic for text/base64
     if (file.isImage) {
       saveAs(file.content, file.name);
     } else {
@@ -159,7 +144,6 @@ export default function App() {
 
   const selectedPresetInfo = presets.find(p => p.id === activePreset);
 
-  // Group models for better UI
   const groupedModels = {
     [t('group_google')]: [
       AiModel.GOOGLE_GEMINI_3_PRO,
@@ -186,7 +170,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-12 transition-colors duration-300">
-      {/* Header */}
       <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -201,10 +184,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Language & Theme Selectors */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-end sm:items-center">
-
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
@@ -247,19 +227,14 @@ export default function App() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-          {/* Left Column: Configuration Form */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 transition-colors duration-300">
-
-              {/* Presets Section (New Dropdown UI) */}
               <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800 relative z-20">
                 <div className="flex items-center gap-2 mb-3 text-slate-800 dark:text-slate-200">
                   <Library size={20} className="text-indigo-600 dark:text-indigo-400" />
                   <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{t('presetsTitle')}</h2>
                 </div>
 
-                {/* Dropdown Trigger */}
                 <button
                   onClick={() => setIsPresetDropdownOpen(!isPresetDropdownOpen)}
                   className={`w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border rounded-lg shadow-sm transition-all text-left group
@@ -289,7 +264,6 @@ export default function App() {
                   </div>
                 </button>
 
-                {/* Dropdown Menu */}
                 {isPresetDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setIsPresetDropdownOpen(false)}></div>
@@ -306,7 +280,7 @@ export default function App() {
                                 ${activePreset === preset.id
                                 ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800'
                                 : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border border-transparent'
-                              }`}
+                                }`}
                           >
                             <div className="flex-1 min-w-0 pr-2">
                               <div className="flex items-center gap-2">
@@ -341,7 +315,6 @@ export default function App() {
               </div>
 
               <div className="space-y-4">
-                {/* Project Name */}
                 <div>
                   <label htmlFor="projectName" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('projectName')}
@@ -357,7 +330,6 @@ export default function App() {
                   />
                 </div>
 
-                {/* Goal / Context */}
                 <div>
                   <label htmlFor="goal" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('goal')}
@@ -376,7 +348,6 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* File Upload Context */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('uploadLabel')}
@@ -396,7 +367,6 @@ export default function App() {
                     />
                   </div>
 
-                  {/* File List */}
                   {config.contextFiles.length > 0 && (
                     <div className="mt-3 space-y-2">
                       <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">{config.contextFiles.length} {t('filesAttached')}</p>
@@ -430,7 +400,6 @@ export default function App() {
                   )}
                 </div>
 
-                {/* AI Model */}
                 <div>
                   <label htmlFor="model" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('model')}
@@ -461,14 +430,10 @@ export default function App() {
                         <Cpu size={12} />
                         {t('modelHelp')}
                       </p>
-                    ) : (
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                      </p>
-                    )}
+                    ) : null}
                   </div>
                 </div>
 
-                {/* CLI Tool Selector */}
                 <div>
                   <label htmlFor="cliTool" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('cliTool')}
@@ -494,7 +459,6 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* Interface Type */}
                 <div>
                   <label htmlFor="interfaceType" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t('interface')}
@@ -516,7 +480,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Capabilities */}
                 <div className="pt-2">
                   <label className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                     <input
@@ -534,7 +497,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Action Button */}
               <div className="mt-8">
                 <button
                   onClick={handleGenerate}
@@ -546,7 +508,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Info Card */}
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-5 border border-blue-100 dark:border-blue-900/50 flex gap-4">
               <div className="text-blue-600 dark:text-blue-400 shrink-0">
                 <ShieldAlert size={24} />
@@ -560,7 +521,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Column: Output */}
           <div className="lg:col-span-7">
             {generatedFiles.length > 0 ? (
               <div className="h-full flex flex-col">
@@ -583,7 +543,6 @@ export default function App() {
               </div>
             )}
           </div>
-
         </div>
       </main>
     </div>
