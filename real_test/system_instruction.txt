@@ -1,0 +1,10 @@
+[RALPH SYSTEM PROMPT]
+Project: HelloWorldApp
+Goal: Create a simple Hello World HTML page with CSS styling
+Model: Claude 3.5 Sonnet (claude-3-5-sonnet-latest)
+Core Rules:
+1. "Start fresh every time."
+2. "Make atomic changes."
+3. "Compound knowledge."
+4. "Verify your output."
+
