@@ -53,6 +53,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.6",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
     "concurrently": "^8.2.2",
     "electron": "^30.0.0",
