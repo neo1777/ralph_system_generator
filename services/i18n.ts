@@ -125,6 +125,28 @@ const uiDictionary: Record<AppLanguage, any> = {
   }
 };
 
+// Fill gaps for build
+[AppLanguage.ES, AppLanguage.FR, AppLanguage.DE, AppLanguage.PT, AppLanguage.RU, AppLanguage.JA].forEach(lang => {
+  if (!uiDictionary[lang]) uiDictionary[lang] = uiDictionary[AppLanguage.EN];
+});
+
 export const getUiText = (lang: AppLanguage, key: TranslationKey): string => uiDictionary[lang]?.[key] || uiDictionary[AppLanguage.EN][key];
 export const getOutputText = (lang: AppLanguage, key: OutputKey): string => uiDictionary[lang]?.[key] || uiDictionary[AppLanguage.EN][key];
 export const getInstructionText = (lang: AppLanguage, key: InstructionKey): string => uiDictionary[lang]?.[key] || uiDictionary[AppLanguage.EN][key];
+
+export const getInterfaceLabel = (lang: AppLanguage, type: InterfaceType): string => {
+  return type === InterfaceType.TUI ? getUiText(lang, 'iface_tui') : getUiText(lang, 'iface_bash');
+};
+
+export const getCliToolLabel = (lang: AppLanguage, tool: CliTool): string => {
+  const map: Record<CliTool, TranslationKey> = {
+    [CliTool.MANUAL]: 'tool_manual',
+    [CliTool.ANTIGRAVITY]: 'tool_antigravity',
+    [CliTool.LLM_CLI]: 'tool_llm',
+    [CliTool.GCLOUD]: 'tool_gcloud',
+    [CliTool.OLLAMA]: 'tool_ollama',
+    [CliTool.CLAUDE_CLI]: 'tool_claude',
+    [CliTool.OPENAI_CLI]: 'tool_openai'
+  };
+  return getUiText(lang, map[tool]);
+};
