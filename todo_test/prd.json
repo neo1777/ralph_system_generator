@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Environment Setup",
+    "description": "Initialize the project structure and verify the environment for 'TodoApp'.",
+    "acceptance_criteria": "Script runs successfully and prints a confirmation.",
+    "passes": false
+  },
+  {
+    "id": 2,
+    "title": "Core Logic Implementation",
+    "description": "Implement the main functionality: Create a modern Todo List app with HTML, CSS and JS. Features: add, delete, mark...",
+    "acceptance_criteria": "All tests pass and the main feature works as described.",
+    "passes": false
+  }
+]
