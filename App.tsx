@@ -10,22 +10,44 @@ import { Bot, Settings, LayoutTemplate, Play, ShieldAlert, Cpu, Globe, Terminal,
 type Theme = 'light' | 'dark';
 
 export default function App() {
-  const [config, setConfig] = useState<RalphConfig>({
-    projectName: 'MyRalphApp',
-    goal: 'Create a Todo List app with React and LocalStorage',
-    model: AiModel.GOOGLE_GEMINI_3_PRO,
-    interfaceType: InterfaceType.BASH_BASIC,
-    cliTool: CliTool.MANUAL,
-    includeDevBrowser: true,
-    uiLanguage: AppLanguage.IT,
-    outputLanguage: AppLanguage.IT,
-    contextFiles: []
+  const [config, setConfig] = useState<RalphConfig>(() => {
+    let initialLang = AppLanguage.IT;
+    if (typeof window !== 'undefined' && navigator.language) {
+      const code = navigator.language.split('-')[0].toLowerCase();
+      switch (code) {
+        case 'en': initialLang = AppLanguage.EN; break;
+        case 'es': initialLang = AppLanguage.ES; break;
+        case 'fr': initialLang = AppLanguage.FR; break;
+        case 'de': initialLang = AppLanguage.DE; break;
+        case 'it': initialLang = AppLanguage.IT; break;
+        case 'pt': initialLang = AppLanguage.PT; break;
+        case 'zh': initialLang = AppLanguage.ZH; break;
+        case 'ja': initialLang = AppLanguage.JA; break;
+      }
+    }
+    return {
+      projectName: 'MyRalphApp',
+      goal: 'Create a Todo List app with React and LocalStorage',
+      model: AiModel.GOOGLE_GEMINI_3_PRO,
+      interfaceType: InterfaceType.BASH_BASIC,
+      cliTool: CliTool.MANUAL,
+      includeDevBrowser: true,
+      uiLanguage: initialLang,
+      outputLanguage: initialLang,
+      contextFiles: []
+    };
   });
 
   const [generatedFiles, setGeneratedFiles] = useState<GeneratedFile[]>([]);
   const [activePreset, setActivePreset] = useState<string | null>(null);
   const [isPresetDropdownOpen, setIsPresetDropdownOpen] = useState(false);
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 5000);
+  };
 
   const presets = useMemo(() => getPresets(config.uiLanguage), [config.uiLanguage]);
 
@@ -51,8 +73,18 @@ export default function App() {
   };
 
   const handleGenerate = () => {
-    const files = generateRalphSystem(config);
-    setGeneratedFiles(files);
+    try {
+      if (!config.projectName.trim()) {
+        showNotification(getUiText(config.uiLanguage, 'projectName') + " required", 'error');
+        return;
+      }
+      const files = generateRalphSystem(config);
+      setGeneratedFiles(files);
+      showNotification("Sistema Ralph generato con successo!", 'success');
+    } catch (error) {
+      console.error(error);
+      showNotification("Errore durante la generazione: " + (error as Error).message, 'error');
+    }
   };
 
   const handleApplyPreset = (preset: Preset) => {
@@ -65,7 +97,8 @@ export default function App() {
       cliTool: prev.cliTool
     }));
     setActivePreset(preset.id);
-    setTimeout(() => setActivePreset(null), 2000);
+    setIsPresetDropdownOpen(false);
+    showNotification(`Preset "${preset.title}" caricato!`, 'success');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -280,7 +313,7 @@ export default function App() {
                                 ${activePreset === preset.id
                                 ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800'
                                 : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border border-transparent'
-                                }`}
+                              }`}
                           >
                             <div className="flex-1 min-w-0 pr-2">
                               <div className="flex items-center gap-2">
@@ -545,6 +578,20 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* Notification Toast */}
+      {notification && (
+        <div className={`fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-xl border flex items-center gap-3 z-50 animate-fade-in-up transition-all ${notification.type === 'error' ? 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-200' :
+          notification.type === 'success' ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-200' :
+            'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/50 dark:border-blue-800 dark:text-blue-200'
+          }`}>
+          {notification.type === 'error' ? <ShieldAlert size={20} /> : <CheckCircle2 size={20} />}
+          <span className="font-medium">{notification.message}</span>
+          <button onClick={() => setNotification(null)} className="ml-2 opacity-60 hover:opacity-100">
+            <X size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
