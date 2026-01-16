@@ -15,13 +15,13 @@ if (typeof Blob === 'undefined') {
 }
 
 const TOOLS_TO_TEST = [
-    { tool: CliTool.LLM_CLI, model: AiModel.OPENAI_GPT_4O, dir: 'ralph_test_llm' },
-    { tool: CliTool.OLLAMA, model: AiModel.LLAMA_4_405B, dir: 'ralph_test_ollama' },
-    { tool: CliTool.GCLOUD, model: AiModel.GOOGLE_GEMINI_3_FLASH, dir: 'ralph_test_gcloud' },
-    { tool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_4O, dir: 'ralph_test_openai' },
-    { tool: CliTool.MANUAL, model: AiModel.CLAUDE_3_5_SONNET, dir: 'ralph_test_manual' },
+    { tool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_FLASH, dir: 'ralph_test_gemini' },
+    { tool: CliTool.OLLAMA, model: AiModel.DEEPSEEK_R1, dir: 'ralph_test_ollama' },
+    { tool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_5_2_PRO, dir: 'ralph_test_openai' },
+    { tool: CliTool.MANUAL, model: AiModel.CLAUDE_4_5_OPUS, dir: 'ralph_test_manual' },
     { tool: CliTool.ANTIGRAVITY, model: AiModel.GOOGLE_GEMINI_3_PRO, dir: 'ralph_test_antigravity' },
-    { tool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_3_5_SONNET, dir: 'ralph_test_claude' }
+    { tool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_4_5_SONNET, dir: 'ralph_test_claude' },
+    { tool: CliTool.CURL, model: AiModel.DEEPSEEK_V4, dir: 'ralph_test_curl' }
 ];
 
 async function run() {

@@ -42,7 +42,7 @@ const verifyScenario = (lang: AppLanguage, preset: any) => {
         projectName: preset.config.projectName || 'test-project',
         goal: preset.config.goal || 'Test Goal',
         model: preset.config.model || AiModel.GOOGLE_GEMINI_3_FLASH,
-        cliTool: CliTool.LLM_CLI, // Default testing tool
+        cliTool: CliTool.GEMINI_CLI, // Default testing tool
         interfaceType: InterfaceType.BASH_BASIC, // Verify Bash by default
         includeDevBrowser: false,
         uiLanguage: lang,

@@ -8,7 +8,7 @@ Questa applicazione permette agli sviluppatori di generare configurazioni pronte
 
 *   **Generazione Istantanea:** Crea automaticamente la struttura di file necessaria (`prd.json`, `agents.md`, `INSTRUCTIONS.md`, script di orchestrazione).
 *   **Catalogo Preset Internazionalizzato (Nuovo):** Include 20 template pronti all'uso (Siti Web, Flutter, Backend Go, Python Data). **Tutto il contenuto dei preset**, inclusi i prompt, le descrizioni e persino i file di mock (codice legacy commentato, README.md simulati), viene tradotto automaticamente in base alla lingua dell'interfaccia scelta (Default: Italiano).
-*   **Supporto Multi-Modello:** Configurazioni ottimizzate per **Google Gemini 1.5/2.5 Pro/Flash**, **Claude 3.5**, **OpenAI GPT-4o** e modelli più recenti (**DeepSeek V3/R1**, Llama 3). Supporto esteso via **cURL** per Mistral, Cohere e Groq.
+*   **Supporto Multi-Modello (Jan 2026):** Configurazioni ottimizzate per **Google Gemini 3 Pro/Flash**, **Claude 4.5 Opus/Sonnet/Haiku**, **OpenAI GPT-5.2 Pro/Codex** e modelli all'avanguardia (**DeepSeek V4/R1**, Llama 4). Supporto nativo per **Mistral 3 AI**, **Cohere Command R+** e **Groq**.
 *   **Stima dei Costi Integrata (Nuovo):** Genera automaticamente un file `COSTS.md` con il calcolo dei costi stimati per il modello selezionato (Input/Output per 1M token), basato sui prezzi pubblici aggiornati a Gennaio 2026.
 *   **Contesto Avanzato con Upload:** Carica file di testo (es. documentazione, snippet di codice) e immagini (es. mockup UI) direttamente nel contesto iniziale. I file di testo vengono formattati in `agents.md` con delimitatori chiari, le immagini salvate nella cartella `assets/`.
 *   **Mock Data Injection:** I preset includono automaticamente file "simulati" (codice legacy sporco, wireframe SVG, log di errori) per permetterti di testare immediatamente le capacità dell'agente.
@@ -84,13 +84,16 @@ Il sistema è stato sottoposto a un rigoroso processo di validazione automatizza
 
 1.  **Test Headless (Matrice Completa):**
     *   Verificati **320 scenari** (8 Lingue x 20 Preset x 2 Interfacce).
-    *   Risultato: **100% Pass** su struttura file, internazionalizzazione e conformità "Ralph Loop" (incluso fix per System Prompt standard).
-2.  **Stress Test (Fuzzing):**
-    *   Eseguite **500 iterazioni** con input casuali (Unicode, stringhe SQL-like, allegati binari corrotti).
-    *   Risultato: **0 Crash**, stabilità 100%.
-3.  **Real-Life & E2E:**
-    *   Validazione fisica roadmap 2026: **@anthropic-ai/claude-code**, **@google/gemini-cli**, **openai** (Python SDK) e **ollama** (Local).
-    *   Simulazione End-to-End completa con Git init, chmod e loop di task completati con successo.
+    *   Risultato: **100% Pass** su struttura file, internazionalizzazione e conformità "Ralph Loop".
+2.  **Verifica Semantica Esaustiva (Nuovo):**
+    *   **Preset Matrix Analysis**: 100% success rate su tutti i **20 preset** in tutte le lingue.
+    *   **Command Accuracy**: Validata l'esattezza letterale di ogni comando CLI 2026 (`gemini run`, `claude-code`).
+3.  **Simulazione "Real-Life" (Phase 8):**
+    *   Testati scenari di errore comuni (mancanza Git, payload corrotti, cambi lingua in corsa).
+    *   Verificata l'integrità strutturale degli ZIP generati (percorsi assets binari e file TUI).
+4.  **E2E Loop Automation:**
+    *   Validazione fisica con **@anthropic-ai/claude-code**, **@google/gemini-cli**, **openai-codex** e **ollama**.
+
 
 ## 💻 Stack Tecnologico
 

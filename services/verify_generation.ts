@@ -19,7 +19,7 @@ const mockConfig: RalphConfig = {
     goal: 'Test Goal',
     model: AiModel.GOOGLE_GEMINI_3_PRO,
     interfaceType: InterfaceType.BASH_BASIC,
-    cliTool: CliTool.LLM_CLI,
+    cliTool: CliTool.GEMINI_CLI,
     includeDevBrowser: false,
     uiLanguage: AppLanguage.EN,
     outputLanguage: AppLanguage.EN,

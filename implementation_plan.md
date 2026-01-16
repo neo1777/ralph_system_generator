@@ -37,27 +37,26 @@ This plan outlines the execution strategy for the multi-phase roadmap defined in
     *   **Node/Python**: Official SDK usage patterns.
 
 ## Phase 4: System Architecture & Design
-**Objective**: Plan the code structure before writing it.
-*   **Data Modeling**: Update `types.ts` with new `CliTool` and `AiModel` enums derived from Phase 2.
-*   **Service Design**:
-    *   `CostEstimator`: Design the lookup table structure.
-    *   `PayloadGenerator`: Design the factory pattern for generating payloads.
-*   **UI/UX**: Plan the responsive layout and accessibility improvements.
+**Objective**: Plan the code structure *as dictated by Phase 3.5 Analysis*.
+*   **Data Modeling**: Update `types.ts` following the blueprint mappings.
+*   **Service Design**: Define `CostEstimator` and `PayloadGenerator` specs for Jan 2026.
 
-## Phase 5: Implementation (Atomic & Capillary)
-**Objective**: Write the code in small, atomic, verified steps.
-*   **Step 1**: Core Types & Interfaces.
-*   **Step 2**: `CostEstimator` Service (Logic only).
-*   **Step 3**: `ralphLogic` Refactoring (The heavy lifting).
-    *   Implement one provider at a time (e.g., "Implement Gemini", verify, then "Implement Claude").
-*   **Step 4**: Internationalization (Update `i18n.ts` with new strings).
+## Phase 5: Implementation (Coherent Execution)
+**Objective**: Execute changes following the file-level targets in `codebase_analysis.md`.
+*   **Refactor**: Modify `ralphLogic.ts` and `i18n.ts` in sync.
+*   **Sync**: Ensure all 20 presets are updated to the current fleet.
 
 ## Phase 6: UI/UX Design & Polish
-**Objective**: Make it beautiful and usable.
-*   **Tasks**: Implement responsive controls, dark/light mode refinements, and real-time cost feedback in the UI.
+**Objective**: Implement the categorized model UI and cost feedback analyzed in Phase 3.5.
 
-## Phase 7: Verification (Multi-Level)
-**Objective**: Prove it works.
-*   **Level 1 (Browser)**: Verify UI generation and zip formatting.
-*   **Level 2 (Terminal)**: Execute generated scripts in a real shell.
-*   **Level 3 (Deployment)**: Verify documentation accuracy and deployment readiness.
+## Phase 7: Output Semantic & Content Verification (Exhaustive)
+**Objective**: Guarantee 100% semantic accuracy for every possible configuration.
+*   **Exhaustive Preset Check**: Loop through all 20 presets in `verify_output_content.ts`.
+*   **ZIP Validation**: Verify the output of `JSZip` for path correctness and asset inclusion.
+*   **Command Accuracy**: Ensure every CLI tool (Gemini, Claude, OpenAI, DeepSeek) has the correct 2026 flags.
+
+## Phase 8: Multi-Level Verification (Realistic Scenarios)
+**Objective**: Stress-test the system with "human-like" edge cases.
+*   **Common Use Simulation**: Test script behavior when Git is not initialized or when payloads are corrupted.
+*   **Preset E2E**: Verify all 20 presets in a real execution loop (BASH and TUI).
+*   **Final Alignment**: Documentation update after all new exhaustive tests pass.

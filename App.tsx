@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { AiModel, InterfaceType, RalphConfig, GeneratedFile, AppLanguage, CliTool, ContextFile } from './types';
-import { generateRalphSystem } from './services/ralphLogic';
+import { generateRalphSystem, getEstimatedCost } from './services/ralphLogic';
 import { getPresets, Preset } from './services/presets';
 import { CodeViewer } from './components/CodeViewer';
 import { getUiText, getInterfaceLabel, getCliToolLabel } from './services/i18n';
@@ -28,7 +28,7 @@ export default function App() {
     return {
       projectName: 'MyRalphApp',
       goal: 'Create a Todo List app with React and LocalStorage',
-      model: AiModel.GOOGLE_GEMINI_2_5_PRO,
+      model: AiModel.GOOGLE_GEMINI_3_PRO,
       interfaceType: InterfaceType.BASH_BASIC,
       cliTool: CliTool.MANUAL,
       includeDevBrowser: true,
@@ -180,34 +180,36 @@ export default function App() {
 
   const groupedModels = {
     [t('group_google')]: [
-      AiModel.GOOGLE_GEMINI_2_5_FLASH,
-      AiModel.GOOGLE_GEMINI_2_5_PRO
+      AiModel.GOOGLE_GEMINI_3_PRO,
+      AiModel.GOOGLE_GEMINI_3_FLASH,
+      AiModel.GOOGLE_GEMINI_2_5_FLASH
     ],
     [t('group_anthropic')]: [
-      AiModel.CLAUDE_3_5_SONNET,
-      AiModel.CLAUDE_3_5_HAIKU,
-      AiModel.CLAUDE_3_OPUS
+      AiModel.CLAUDE_4_5_OPUS,
+      AiModel.CLAUDE_4_5_SONNET,
+      AiModel.CLAUDE_4_5_HAIKU
     ],
     [t('group_openai')]: [
-      AiModel.OPENAI_GPT_4O,
-      AiModel.OPENAI_GPT_4O_MINI
+      AiModel.OPENAI_GPT_5_2_PRO,
+      AiModel.OPENAI_GPT_5_2_CODEX
     ],
     [t('group_deepseek')]: [
+      AiModel.DEEPSEEK_V4,
       AiModel.DEEPSEEK_V3,
       AiModel.DEEPSEEK_R1
     ],
     [t('group_mistral')]: [
-      AiModel.MISTRAL_SMALL,
+      AiModel.MISTRAL_3_SMALL,
+      AiModel.MISTRAL_3_MEDIUM,
       AiModel.MISTRAL_LARGE
     ],
-    [t('group_cohere')]: [
-      AiModel.COHERE_COMMAND_R_PLUS
-    ],
     [t('group_groq')]: [
-      AiModel.GROQ_LLAMA_3_8B,
-      AiModel.GROQ_LLAMA_3_70B
+      AiModel.GROQ_LLAMA_3_70B,
+      AiModel.GROQ_DEEPSEEK_R1
     ]
   };
+
+  const currentCost = getEstimatedCost(config.model);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-12 transition-colors duration-300">
@@ -465,13 +467,19 @@ export default function App() {
                       <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                   </div>
-                  <div className="mt-2 flex gap-2">
+                  <div className="mt-2 space-y-2">
                     {config.model.includes('Reasoning') || config.model.includes('o1') || config.model.includes('R1') ? (
                       <p className="text-xs text-purple-600 dark:text-purple-400 flex items-center gap-1">
                         <Cpu size={12} />
                         {t('modelHelp')}
                       </p>
                     ) : null}
+                    <div className="flex items-center justify-between text-[10px] font-mono bg-slate-50 dark:bg-slate-800/50 p-2 rounded border border-slate-100 dark:border-slate-800">
+                      <span className="text-slate-500 uppercase">{t('lbl_cost_est')}</span>
+                      <span className="text-green-600 dark:text-green-400 font-bold">
+                        ${currentCost.inputPer1M.toFixed(2)} / ${currentCost.outputPer1M.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

@@ -1,25 +1,10 @@
 import { RalphConfig, AiModel, InterfaceType, GeneratedFile, CliTool, AppLanguage, CostEstimate } from '../types';
 import { getOutputText, getInstructionText, InstructionKey, getUiText } from './i18n';
+import { modelPricing } from './CostEstimator';
+import { generatePayload } from './PayloadGenerator';
 
 export const getEstimatedCost = (model: AiModel): CostEstimate => {
-  // Pricing per 1M tokens (USD) - Jan 2026
-  switch (model) {
-    case AiModel.GOOGLE_GEMINI_2_5_FLASH: return { inputPer1M: 0.075, outputPer1M: 0.30, currency: 'USD' };
-    case AiModel.GOOGLE_GEMINI_2_5_PRO: return { inputPer1M: 1.25, outputPer1M: 5.00, currency: 'USD' };
-    case AiModel.CLAUDE_3_5_HAIKU: return { inputPer1M: 0.80, outputPer1M: 4.00, currency: 'USD' };
-    case AiModel.CLAUDE_3_5_SONNET: return { inputPer1M: 3.00, outputPer1M: 15.00, currency: 'USD' };
-    case AiModel.CLAUDE_3_OPUS: return { inputPer1M: 15.00, outputPer1M: 75.00, currency: 'USD' };
-    case AiModel.OPENAI_GPT_4O: return { inputPer1M: 2.50, outputPer1M: 10.00, currency: 'USD' };
-    case AiModel.OPENAI_GPT_4O_MINI: return { inputPer1M: 0.15, outputPer1M: 0.60, currency: 'USD' };
-    case AiModel.DEEPSEEK_V3: return { inputPer1M: 0.14, outputPer1M: 0.28, currency: 'USD' }; // Cached/Uncached avg
-    case AiModel.DEEPSEEK_R1: return { inputPer1M: 0.55, outputPer1M: 2.19, currency: 'USD' };
-    case AiModel.MISTRAL_SMALL: return { inputPer1M: 0.10, outputPer1M: 0.30, currency: 'USD' };
-    case AiModel.MISTRAL_LARGE: return { inputPer1M: 2.00, outputPer1M: 6.00, currency: 'USD' };
-    case AiModel.COHERE_COMMAND_R_PLUS: return { inputPer1M: 3.00, outputPer1M: 15.00, currency: 'USD' };
-    case AiModel.GROQ_LLAMA_3_8B: return { inputPer1M: 0.05, outputPer1M: 0.08, currency: 'USD' };
-    case AiModel.GROQ_LLAMA_3_70B: return { inputPer1M: 0.59, outputPer1M: 0.79, currency: 'USD' };
-    default: return { inputPer1M: 0, outputPer1M: 0, currency: 'USD' };
-  }
+  return modelPricing[model] || { inputPer1M: 0, outputPer1M: 0, currency: 'USD' };
 };
 
 // Helper to determine Model Family properties
@@ -33,20 +18,21 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
   let interactive = false;
 
   switch (model) {
-    case AiModel.GOOGLE_GEMINI_2_5_PRO: modelId = "gemini-1.5-pro"; break;
-    case AiModel.GOOGLE_GEMINI_2_5_FLASH: modelId = "gemini-1.5-flash"; break;
-    case AiModel.CLAUDE_3_5_SONNET: modelId = "claude-3-5-sonnet-20241022"; break;
-    case AiModel.CLAUDE_3_5_HAIKU: modelId = "claude-3-5-haiku-20241022"; break;
-    case AiModel.CLAUDE_3_OPUS: modelId = "claude-3-opus-20240229"; break;
-    case AiModel.OPENAI_GPT_4O: modelId = "gpt-4o"; break;
-    case AiModel.OPENAI_GPT_4O_MINI: modelId = "gpt-4o-mini"; break;
+    case AiModel.GOOGLE_GEMINI_3_PRO: modelId = "gemini-3-pro"; break;
+    case AiModel.GOOGLE_GEMINI_3_FLASH: modelId = "gemini-3-flash"; break;
+    case AiModel.CLAUDE_4_5_OPUS: modelId = "claude-4-5-opus"; break;
+    case AiModel.CLAUDE_4_5_SONNET: modelId = "claude-sonnet-4-5"; break;
+    case AiModel.CLAUDE_4_5_HAIKU: modelId = "claude-haiku-4-5"; break;
+    case AiModel.OPENAI_GPT_5_2_CODEX: modelId = "gpt-5.2-codex"; break;
+    case AiModel.OPENAI_GPT_5_2_PRO: modelId = "gpt-5.2-pro"; break;
+    case AiModel.DEEPSEEK_V4: modelId = "deepseek-v4"; break;
     case AiModel.DEEPSEEK_V3: modelId = "deepseek-chat"; break;
     case AiModel.DEEPSEEK_R1: modelId = "deepseek-reasoner"; break;
-    case AiModel.MISTRAL_SMALL: modelId = "mistral-small-latest"; break;
+    case AiModel.MISTRAL_3_SMALL: modelId = "mistral-small-2402"; break;
+    case AiModel.MISTRAL_3_MEDIUM: modelId = "mistral-medium-2402"; break;
     case AiModel.MISTRAL_LARGE: modelId = "mistral-large-latest"; break;
-    case AiModel.COHERE_COMMAND_R_PLUS: modelId = "command-r-plus"; break;
-    case AiModel.GROQ_LLAMA_3_8B: modelId = "llama3-8b-8192"; break;
     case AiModel.GROQ_LLAMA_3_70B: modelId = "llama3-70b-8192"; break;
+    case AiModel.GROQ_DEEPSEEK_R1: modelId = "deepseek-r1-distill-llama-70b"; break;
     default: modelId = (model as string).toLowerCase().replace(/ /g, "-");
   }
 
@@ -61,7 +47,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.GEMINI_CLI:
       if (isGoogle) {
-        cliCommand = "gemini prompt run < input_prompt.txt";
+        cliCommand = "gemini run -m " + modelId + " < input_prompt.txt";
         interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_google_model');
@@ -70,7 +56,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.CLAUDE_CLI:
       if (model.includes('Claude')) {
-        cliCommand = "cat input_prompt.txt | claude";
+        cliCommand = "claude-code run -m " + modelId + " < input_prompt.txt";
         interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_claude_model');
@@ -78,15 +64,14 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       }
       break;
     case CliTool.OPENAI_CLI:
-      // Parsing logic for OpenAI Python CLI to extract just the message content
-      cliCommand = "openai api chat.completions.create -m " + modelId + " -g user \"$(cat input_prompt.txt)\" | jq -r '.choices[0].message.content'";
+      cliCommand = "openai-codex run -m " + modelId + " < input_prompt.txt";
       break;
     case CliTool.OLLAMA:
       cliCommand = "ollama run " + modelId + " \"$(cat input_prompt.txt)\"";
-      interactive = true; // Use interactive mode for Ollama generally
+      interactive = true;
       break;
     case CliTool.CURL:
-      // Universal cURL Handler for API-based Providers
+      // Universal cURL Adapter using PayloadGenerator
       let apiUrl = "";
       let authHeader = "";
 
@@ -96,32 +81,23 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       } else if (model.includes('Mistral')) {
         apiUrl = "https://api.mistral.ai/v1/chat/completions";
         authHeader = "Authorization: Bearer $MISTRAL_API_KEY";
-      } else if (model.includes('Cohere')) {
-        apiUrl = "https://api.cohere.com/v1/chat"; // Cohere has slightly different API, but v2 is OAI compat? v1 needs verification.
-        // Actually Cohere has an openai compatible endpoint too often. Let's assume standard /chat/completions for now or generic Logic
-        // Research says Cohere native API is /v1/chat. Let's use that if possible or standard OAI compat.
-        // Update: Mistral, Groq, DeepSeek are OAI compatible. Cohere is distinct.
-        // For simplicity towards 'Standard API' concept, let's stick to standard OAI structure for DeepSeek, Mistral, Groq.
-        // If Cohere is selected, we might need specific payload.
-        apiUrl = "https://api.cohere.com/v1/chat";
-        authHeader = "Authorization: Bearer $CO_API_KEY";
       } else if (model.includes('Groq')) {
         apiUrl = "https://api.groq.com/openai/v1/chat/completions";
         authHeader = "Authorization: Bearer $GROQ_API_KEY";
       } else {
-        // Fallback / Local
         apiUrl = "http://localhost:11434/v1/chat/completions";
         authHeader = "Authorization: Bearer ollama";
       }
 
-      // Check if Cohere (Distinct Payload) or OAI Compatible
-      if (model.includes('Cohere')) {
-        cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"" + authHeader + "\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"message\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\" \n    }\" | jq -r '.text'"; // Cohere v1 output is .text or .generations? 
-        // Correction: Cohere v1/chat response has .text
-      } else {
-        // Standard OpenAI Compatible
-        cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"" + authHeader + "\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\"}]\n    }\" | jq -r '.choices[0].message.content'";
+      let jqFilter = ".choices[0].message.content"; // Default (OpenAI/DeepSeek)
+
+      if (model.includes('Gemini')) {
+        jqFilter = ".candidates[0].content.parts[0].text";
+      } else if (model.includes('Claude')) {
+        jqFilter = ".content[0].text";
       }
+
+      cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"" + authHeader + "\" \\\n    -d \"$(cat input_payload.json)\" | jq -r '" + jqFilter + "'";
       break;
     case CliTool.MANUAL:
     default:
@@ -159,12 +135,12 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
       keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_claude');
       break;
     case CliTool.OPENAI_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n" + t('instr_setup_openai_step1') + "\n" + t('instr_setup_openai_step2');
+      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n1. Install Official OpenAI Codex CLI:\n   npm install -g @openai/codex\n2. Run:\n   openai-codex run";
       keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_openai');
       break;
     case CliTool.CURL:
       installSteps = "### " + getUiText(lang, 'tool_curl') + "\n" + t('instr_setup_curl');
-      keySetup = "### " + t('instr_keys_title') + "\n- DeepSeek: `export DEEPSEEK_API_KEY=key`\n- Mistral: `export MISTRAL_API_KEY=key`\n- Cohere: `export CO_API_KEY=key`\n- Groq: `export GROQ_API_KEY=key`\n\n*(Set only the one you are using)*";
+      keySetup = "### " + t('instr_keys_title') + "\n- DeepSeek: `export DEEPSEEK_API_KEY=key`\n- Mistral: `export MISTRAL_API_KEY=key`\n- Groq: `export GROQ_API_KEY=key`\n\n*(Set only the one you are using)*";
       break;
     case CliTool.MANUAL:
     default:
@@ -238,7 +214,11 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
   files.push({
     filename: 'prd.json',
     language: 'json',
-    content: JSON.stringify(prdItems, null, 2),
+    content: JSON.stringify({
+      projectName: config.projectName,
+      version: "1.0.0",
+      items: prdItems
+    }, null, 2),
     description: tUi('desc_prd')
   });
 
@@ -275,7 +255,7 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
     description: tUi('desc_progress')
   });
 
-  // 6. System Prompt
+  // 6. System Prompt & Initial Payload
   const devBrowserInstruction = config.includeDevBrowser ? "\n" + tOut('sys_dev_browser') : "";
   const systemInstructions = tOut('sys_prompt_header') + "\n" + tOut('sys_prompt_project') + ": " + config.projectName + "\n" + tOut('sys_goal_label') + ": " + config.goal + "\n" + tOut('sys_model_label') + ": " + config.model + " (" + modelId + ")\n" + tOut('sys_prompt_core_rules') + ":\n1. \"" + tOut('sys_prompt_fresh') + "\"\n2. \"" + tOut('sys_prompt_atomic') + "\"\n3. \"" + tOut('sys_prompt_compound') + "\"\n4. \"" + tOut('sys_prompt_verification') + "\"\n" + devBrowserInstruction + "\n";
   files.push({
@@ -284,6 +264,16 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
     content: systemInstructions,
     description: tUi('desc_sys_prompt')
   });
+
+  // Initial Payload for Curl Adapter
+  if (config.cliTool === CliTool.CURL) {
+    files.push({
+      filename: 'input_payload.json',
+      language: 'json',
+      content: generatePayload(config),
+      description: 'Initial API Payload'
+    });
+  }
 
   // 7. Orchestration (BASH or TUI)
   if (config.interfaceType === InterfaceType.TUI) {
@@ -306,13 +296,58 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
       if (interactive) {
         executionBlock = "  # 3. Call the Agent (REAL EXECUTION - Interactive)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  " + cliCommand + "\n";
       } else {
-        executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
+        executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  if [ \"" + config.cliTool + "\" == \"" + CliTool.CURL + "\" ]; then\n    python3 payload_gen.py \"$TASK_DESC\" > input_payload.json\n  fi\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
       }
     }
 
     const bashScript = "#!/bin/bash\n# " + tOut('sh_orchestrator_for') + " " + config.projectName + "\n# " + tOut('sh_optimized_for') + ": " + config.model + "\n# " + tOut('sh_cli_tool') + ": " + config.cliTool + "\n\nPRD_FILE=\"prd.json\"\nMEMORY_FILE=\"agents.md\"\nPROGRESS_FILE=\"progress.txt\"\n\nif ! command -v jq &> /dev/null; then\n    echo \"" + tOut('sh_jq_req') + " " + (config.cliTool === CliTool.ANTIGRAVITY ? 'Add to dev.nix' : tOut('sh_install_it')) + "\"\n    exit 1\nfi\n\necho \"" + tOut('script_start') + " " + config.projectName + "...\"\n\nwhile true; do\n  TASK_ID=$(jq -r 'map(select(.passes == false)) | .[0].id' $PRD_FILE)\n  if [ \"$TASK_ID\" == \"null\" ]; then\n    echo \"✅ " + tOut('script_all_passed') + "\"\n    break\n  fi\n\n  TASK_DESC=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].description\" $PRD_FILE)\n  CRITERIA=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].acceptance_criteria\" $PRD_FILE)\n\n  echo \"---------------------------------------------------\"\n  echo \"🤖 " + tOut('script_working') + " #$TASK_ID\"\n  echo \"---------------------------------------------------\"\n\ncat system_instruction.txt > input_prompt.txt\necho \"\" >> input_prompt.txt\ncat <<EOF >> input_prompt.txt\nCONTEXT: $(cat $MEMORY_FILE)\nTASK: $TASK_DESC\nCRITERIA: $CRITERIA\nEOF\n\n" + executionBlock + "\n\n  read -p \"" + tOut('script_manual_check') + " \" RESULT\n\n  if [ \"$RESULT\" == \"y\" ]; then\n    echo \"✨ " + tOut('script_ask_success') + "\"\n    git add .\n    git commit -m \"" + tOut('git_task_commit') + " $TASK_ID\"\n    tmp=$(mktemp)\n    jq \"map(if .id == $TASK_ID then .passes = true else . end)\" $PRD_FILE > \"$tmp\" && mv \"$tmp\" $PRD_FILE\n    echo \"Iter $(date): " + tOut('script_complete') + " $TASK_ID\" >> $PROGRESS_FILE\n  else\n    echo \"❌ " + tOut('script_failed') + "\"\n    echo \"Iter $(date): Failed Task $TASK_ID\" >> $PROGRESS_FILE\n  fi\n  sleep 2\ndone\n";
 
     files.push({ filename: 'run_ralph.sh', language: 'bash', content: bashScript, description: tUi('desc_sh') });
+  }
+
+  // Add Payload Gen Helper for CURL
+  if (config.cliTool === CliTool.CURL) {
+    const modelFamily = config.model.split(' ')[0].toLowerCase();
+    const payloadGenScript = `import json
+import sys
+import os
+
+def generate():
+    task = sys.argv[1] if len(sys.argv) > 1 else ""
+    goal = "${config.goal.replace(/"/g, '\\"')}"
+    context = ""
+    if os.path.exists('agents.md'):
+        with open('agents.md', 'r') as f: context = f.read()
+    
+    prompt = f"Goal: {goal}\\n\\nContext:\\n{context}\\n\\nTask: {task}"
+    
+    model = "${modelId}"
+    
+    if "gemini" in model:
+        payload = {
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.7, "maxOutputTokens": 8192, "responseMimeType": "text/plain"}
+        }
+    elif "claude" in model:
+        payload = {
+            "model": model,
+            "max_tokens": 4096,
+            "messages": [{"role": "user", "content": prompt}]
+        }
+    else:
+        # OpenAI / DeepSeek / Mistral / Groq
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.7
+        }
+    
+    print(json.dumps(payload, indent=2))
+
+if __name__ == "__main__":
+    generate()
+`;
+    files.push({ filename: 'payload_gen.py', language: 'python', content: payloadGenScript, description: 'Helper for API Payloads' });
   }
 
   return files;

@@ -16,28 +16,28 @@ if (typeof Blob === 'undefined') {
 }
 
 const testConfigs: { presetId: string, cliTool: CliTool, model: AiModel, interfaceType: InterfaceType, lang: AppLanguage }[] = [
-    { presetId: 'p3', cliTool: CliTool.LLM_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
-    { presetId: 'p13', cliTool: CliTool.GCLOUD, model: AiModel.GOOGLE_GEMINI_3_FLASH, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
-    { presetId: 'p20', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_3_5_SONNET, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
-    { presetId: 'p12', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_4O, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
+    { presetId: 'p3', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
+    { presetId: 'p13', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_FLASH, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
+    { presetId: 'p20', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_4_5_SONNET, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
+    { presetId: 'p12', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_5_2_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
     { presetId: 'p19', cliTool: CliTool.OLLAMA, model: AiModel.DEEPSEEK_R1, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
     { presetId: 'p1', cliTool: CliTool.ANTIGRAVITY, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
-    { presetId: 'p2', cliTool: CliTool.MANUAL, model: AiModel.LLAMA_4_405B, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
+    { presetId: 'p2', cliTool: CliTool.CURL, model: AiModel.MISTRAL_LARGE, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.EN },
 
-    { presetId: 'p11', cliTool: CliTool.LLM_CLI, model: AiModel.GOOGLE_GEMINI_2_5_FLASH, interfaceType: InterfaceType.TUI, lang: AppLanguage.IT },
-    { presetId: 'p14', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_3_7_SONNET, interfaceType: InterfaceType.TUI, lang: AppLanguage.ES },
-    { presetId: 'p15', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_5, interfaceType: InterfaceType.TUI, lang: AppLanguage.FR },
-    { presetId: 'p16', cliTool: CliTool.OLLAMA, model: AiModel.LLAMA_4_405B, interfaceType: InterfaceType.TUI, lang: AppLanguage.DE },
-    { presetId: 'p17', cliTool: CliTool.GCLOUD, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.TUI, lang: AppLanguage.PT },
+    { presetId: 'p11', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_FLASH, interfaceType: InterfaceType.TUI, lang: AppLanguage.IT },
+    { presetId: 'p14', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_4_5_SONNET, interfaceType: InterfaceType.TUI, lang: AppLanguage.ES },
+    { presetId: 'p15', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_5_2_PRO, interfaceType: InterfaceType.TUI, lang: AppLanguage.FR },
+    { presetId: 'p16', cliTool: CliTool.OLLAMA, model: AiModel.DEEPSEEK_R1, interfaceType: InterfaceType.TUI, lang: AppLanguage.DE },
+    { presetId: 'p17', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.TUI, lang: AppLanguage.PT },
     { presetId: 'p18', cliTool: CliTool.ANTIGRAVITY, model: AiModel.GOOGLE_GEMINI_3_FLASH, interfaceType: InterfaceType.TUI, lang: AppLanguage.ZH },
-    { presetId: 'p4', cliTool: CliTool.LLM_CLI, model: AiModel.CLAUDE_3_5_OPUS, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.JA },
-    { presetId: 'p5', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_3_5_SONNET, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.IT },
-    { presetId: 'p6', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_4O, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.ES },
+    { presetId: 'p4', cliTool: CliTool.GEMINI_CLI, model: AiModel.CLAUDE_4_5_OPUS, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.JA },
+    { presetId: 'p5', cliTool: CliTool.CLAUDE_CLI, model: AiModel.CLAUDE_4_5_SONNET, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.IT },
+    { presetId: 'p6', cliTool: CliTool.OPENAI_CLI, model: AiModel.OPENAI_GPT_5_2_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.ES },
     { presetId: 'p7', cliTool: CliTool.OLLAMA, model: AiModel.DEEPSEEK_V3, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.FR },
-    { presetId: 'p8', cliTool: CliTool.GCLOUD, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.DE },
+    { presetId: 'p8', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.DE },
     { presetId: 'p9', cliTool: CliTool.ANTIGRAVITY, model: AiModel.GOOGLE_GEMINI_3_FLASH, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.PT },
-    { presetId: 'p10', cliTool: CliTool.LLM_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.ZH },
-    { presetId: 'p20', cliTool: CliTool.MANUAL, model: AiModel.CLAUDE_3_7_SONNET, interfaceType: InterfaceType.TUI, lang: AppLanguage.JA },
+    { presetId: 'p10', cliTool: CliTool.GEMINI_CLI, model: AiModel.GOOGLE_GEMINI_3_PRO, interfaceType: InterfaceType.BASH_BASIC, lang: AppLanguage.ZH },
+    { presetId: 'p20', cliTool: CliTool.MANUAL, model: AiModel.CLAUDE_4_5_SONNET, interfaceType: InterfaceType.TUI, lang: AppLanguage.JA },
 ];
 
 console.log("# RALPH EXHAUSTIVE TEST REPORT\n");
@@ -80,12 +80,12 @@ testConfigs.forEach((tc, index) => {
         // CLI Check
         let expectedCmd = "";
         switch (tc.cliTool) {
-            case CliTool.LLM_CLI: expectedCmd = "llm -m"; break;
-            case CliTool.GCLOUD: expectedCmd = "gcloud genai run"; break;
-            case CliTool.CLAUDE_CLI: expectedCmd = "claude -p"; break;
-            case CliTool.OPENAI_CLI: expectedCmd = "openai api chat.completions.create"; break;
+            case CliTool.GEMINI_CLI: expectedCmd = "gemini run"; break;
+            case CliTool.CLAUDE_CLI: expectedCmd = "claude-code run"; break;
+            case CliTool.OPENAI_CLI: expectedCmd = "openai-codex run"; break;
             case CliTool.OLLAMA: expectedCmd = "ollama run"; break;
-            case CliTool.ANTIGRAVITY: expectedCmd = "gcloud genai run"; break;
+            case CliTool.ANTIGRAVITY: expectedCmd = tc.model.includes('Google') ? "gcloud genai run" : "llm -m"; break;
+            case CliTool.CURL: expectedCmd = "curl"; break;
             case CliTool.MANUAL: expectedCmd = "<your-tool> run"; break;
         }
 

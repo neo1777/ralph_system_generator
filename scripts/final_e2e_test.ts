@@ -34,8 +34,8 @@ async function run() {
     const config: RalphConfig = {
         projectName: "FinalTestApp",
         goal: "Create a simple Hello World page",
-        model: AiModel.OPENAI_GPT_4O,
-        cliTool: CliTool.LLM_CLI, // We will mock this command
+        model: AiModel.GOOGLE_GEMINI_3_FLASH,
+        cliTool: CliTool.GEMINI_CLI, // We will mock this command
         interfaceType: InterfaceType.BASH_BASIC,
         includeDevBrowser: false,
         uiLanguage: AppLanguage.EN,
@@ -74,7 +74,7 @@ async function run() {
     let scriptContent = fs.readFileSync('run_ralph.sh', 'utf-8');
     // Replace the call line
     scriptContent = scriptContent.replace(
-        /OUTPUT=\$\(llm -m .*?\)/,
+        /OUTPUT=\$\(gemini run .*?\)/,
         'OUTPUT="MOCK_AGENT: I have completed the task successfully. Here is the code..."'
     );
     fs.writeFileSync('run_ralph.sh', scriptContent);
