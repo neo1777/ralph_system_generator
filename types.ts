@@ -22,11 +22,11 @@ export enum InterfaceType {
 export enum CliTool {
   MANUAL = 'Manual / Template (Safe Mode)',
   ANTIGRAVITY = 'Google Antigravity / Project IDX (Cloud IDE)',
-  LLM_CLI = 'LLM CLI (simonw/llm) - Recommended',
-  GCLOUD = 'Google Cloud SDK (gcloud)',
+  GEMINI_CLI = 'Google Gemini CLI (@google/gemini-cli)',
+  CLAUDE_CLI = 'Anthropic Claude CLI (@anthropic-ai/claude-code)',
+  OPENAI_CLI = 'OpenAI Python CLI (pip install openai)',
   OLLAMA = 'Ollama (Local)',
-  CLAUDE_CLI = 'Claude CLI (Anthropic)',
-  OPENAI_CLI = 'OpenAI CLI (Python)'
+  CURL_DEEPSEEK = 'cURL (Standard API / DeepSeek)'
 }
 
 export enum AppLanguage {

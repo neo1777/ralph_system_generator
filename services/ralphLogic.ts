@@ -37,19 +37,14 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
         commentWarning = true;
       }
       break;
-    case CliTool.LLM_CLI:
-      cliCommand = "llm -m " + modelId + " < input_prompt.txt";
-      break;
-    case CliTool.GCLOUD:
+    case CliTool.GEMINI_CLI:
       if (isGoogle) {
-        cliCommand = "cat input_prompt.txt | gemini";
+        cliCommand = "gemini prompt run < input_prompt.txt";
+        interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_google_model');
         commentWarning = true;
       }
-      break;
-    case CliTool.OLLAMA:
-      cliCommand = "ollama run " + modelId + " \"$(cat input_prompt.txt)\"";
       break;
     case CliTool.CLAUDE_CLI:
       if (model.includes('Claude')) {
@@ -61,7 +56,21 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       }
       break;
     case CliTool.OPENAI_CLI:
-      cliCommand = "openai api chat.completions.create -m " + modelId + " -g user \"$(cat input_prompt.txt)\"";
+      // Parsing logic for OpenAI Python CLI to extract just the message content
+      cliCommand = "openai api chat.completions.create -m " + modelId + " -g user \"$(cat input_prompt.txt)\" | jq -r '.choices[0].message.content'";
+      break;
+    case CliTool.OLLAMA:
+      // Ollama run is interactive, but can accept piped input. 
+      // For Ralph Loop, we often want the output captured if it's not a conversation.
+      // However, 'ollama run' behaves like an interactive session if TTY.
+      // We'll treat it as interactive for best experience in the loop? 
+      // Actually, 'ollama run model "prompt"' outputs text. 
+      cliCommand = "ollama run " + modelId + " \"$(cat input_prompt.txt)\"";
+      break;
+    case CliTool.CURL_DEEPSEEK:
+      // Standard OpenAI-compatible API call via cURL
+      const apiUrl = model.includes('DeepSeek') ? 'https://api.deepseek.com/chat/completions' : 'http://localhost:11434/v1/chat/completions';
+      cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\"}]\n    }\" | jq -r '.choices[0].message.content'";
       break;
     case CliTool.MANUAL:
     default:
@@ -84,27 +93,27 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
   switch (cliTool) {
     case CliTool.ANTIGRAVITY:
       installSteps = "### " + getUiText(lang, 'tool_antigravity') + "\n" + t('instr_setup_idx');
-      keySetup = t('instr_keys_gcloud_cmd');
+      keySetup = t('instr_keys_gemini');
       break;
-    case CliTool.LLM_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_llm') + "\n1. Install LLM CLI:\n   pip install llm\n2. Install Plugins:\n   llm install llm-gemini llm-anthropic";
-      keySetup = "### " + t('instr_keys_title') + "\nRun `llm keys set openai` (or equivalent) to setup keys.";
+    case CliTool.GEMINI_CLI:
+      installSteps = "### " + getUiText(lang, 'tool_gemini') + "\n" + t('instr_setup_gemini_step1') + "\n" + t('instr_setup_gemini_step2');
+      keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_gemini');
       break;
     case CliTool.OLLAMA:
       installSteps = "### " + getUiText(lang, 'tool_ollama') + "\n" + t('instr_setup_ollama').replace('{modelId}', modelId);
       keySetup = t('instr_keys_no_req');
       break;
     case CliTool.CLAUDE_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_claude') + "\n1. Install Claude Code CLI:\n   npm install -g @anthropic-ai/claude-code\n2. Authenticate:\n   claude";
-      keySetup = "### " + t('instr_keys_title') + "\nAuthentication is handled via browser login.";
+      installSteps = "### " + getUiText(lang, 'tool_claude') + "\n" + t('instr_setup_claude') + "\n2. Authenticate:\n   claude";
+      keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_claude');
       break;
     case CliTool.OPENAI_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n1. Install Codex CLI:\n   npm install -g @openai/codex";
-      keySetup = "### " + t('instr_keys_title') + "\nRun `codex login` to authenticate.";
+      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n" + t('instr_setup_openai_step1') + "\n" + t('instr_setup_openai_step2');
+      keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_openai');
       break;
-    case CliTool.GCLOUD:
-      installSteps = "### " + getUiText(lang, 'tool_gcloud') + "\n1. Install Gemini CLI:\n   npm install -g @google/gemini-cli\n2. Authenticate:\n   gemini";
-      keySetup = "### " + t('instr_keys_title') + "\nAuthentication via Google account on first run.";
+    case CliTool.CURL_DEEPSEEK:
+      installSteps = "### " + getUiText(lang, 'tool_curl') + "\n" + t('instr_setup_curl');
+      keySetup = "### " + t('instr_keys_title') + "\nexport DEEPSEEK_API_KEY=your_key";
       break;
     case CliTool.MANUAL:
     default:

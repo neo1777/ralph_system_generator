@@ -14,7 +14,8 @@ type TranslationKey =
   | 'desc_nix' | 'desc_instructions' | 'desc_prd' | 'desc_agents' | 'desc_progress'
   | 'desc_sys_prompt' | 'desc_tui' | 'desc_sh' | 'desc_ctx_img'
   | 'iface_bash' | 'iface_tui'
-  | 'tool_manual' | 'tool_antigravity' | 'tool_llm' | 'tool_gcloud' | 'tool_ollama' | 'tool_claude' | 'tool_openai';
+  | 'iface_bash' | 'iface_tui'
+  | 'tool_manual' | 'tool_antigravity' | 'tool_gemini' | 'tool_claude' | 'tool_openai' | 'tool_ollama' | 'tool_curl';
 
 type OutputKey =
   | 'prd_setup_title' | 'prd_setup_desc' | 'prd_criteria_setup'
@@ -41,12 +42,14 @@ type OutputKey =
 export type InstructionKey =
   | 'instr_title' | 'instr_sys_req_title' | 'instr_sys_req_body'
   | 'instr_setup_title' | 'instr_setup_idx'
-  | 'instr_setup_llm_step1' | 'instr_setup_llm_step2'
+  | 'instr_setup_title' | 'instr_setup_idx'
+  | 'instr_setup_gemini_step1' | 'instr_setup_gemini_step2'
   | 'instr_setup_ollama'
   | 'instr_setup_claude'
-  | 'instr_setup_openai'
-  | 'instr_setup_gcloud' | 'instr_setup_manual'
-  | 'instr_keys_title' | 'instr_keys_setup_cmd' | 'instr_keys_no_req' | 'instr_keys_gcloud_cmd' | 'instr_keys_claude' | 'instr_keys_openai'
+  | 'instr_setup_openai_step1' | 'instr_setup_openai_step2'
+  | 'instr_setup_curl'
+  | 'instr_setup_manual'
+  | 'instr_keys_title' | 'instr_keys_setup_cmd' | 'instr_keys_no_req' | 'instr_keys_gemini' | 'instr_keys_claude' | 'instr_keys_openai'
   | 'instr_run_title' | 'instr_run_step_chmod' | 'instr_run_step_git' | 'instr_run_step_start'
   | 'instr_workflow_title' | 'instr_workflow_body';
 
@@ -86,11 +89,11 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     iface_tui: "Ralph TUI (Terminal UI)",
     tool_manual: "Manual / Template",
     tool_antigravity: "Google Antigravity / IDX",
-    tool_llm: "LLM CLI (simonw/llm)",
-    tool_gcloud: "Gemini CLI (@google/gemini-cli)",
-    tool_ollama: "Ollama (Local)",
+    tool_gemini: "Google Gemini CLI (@google/gemini-cli)",
     tool_claude: "Claude CLI (@anthropic-ai/claude-code)",
-    tool_openai: "OpenAI Codex CLI (@openai/codex)",
+    tool_openai: "OpenAI Python CLI (pip install openai)",
+    tool_ollama: "Ollama (Local)",
+    tool_curl: "cURL (DeepSeek / API)",
     group_google: "Google Gemini",
     group_anthropic: "Anthropic Claude",
     group_openai: "OpenAI",
@@ -196,17 +199,18 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     instr_sys_req_body: "Bash, Git, jq, and your chosen CLI tool",
     instr_setup_title: "Setup",
     instr_setup_idx: "Already configured in Project IDX",
-    instr_setup_llm_step1: "Install LLM CLI: pip install llm",
-    instr_setup_llm_step2: "Install model plugin",
+    instr_setup_gemini_step1: "Install Gemini CLI: npm install -g @google/gemini-cli",
+    instr_setup_gemini_step2: "Run 'gemini' to authenticate",
     instr_setup_ollama: "Install Ollama and pull your model",
     instr_setup_claude: "npm install -g @anthropic-ai/claude-code",
-    instr_setup_openai: "pip install openai",
-    instr_setup_gcloud: "npm install -g @google/gemini-cli",
+    instr_setup_openai_step1: "Install OpenAI Python: pip install openai",
+    instr_setup_openai_step2: "Also install 'jq' for JSON parsing",
+    instr_setup_curl: "Ensure 'curl' and 'jq' are installed",
     instr_setup_manual: "Use your preferred AI CLI tool",
     instr_keys_title: "API Keys",
     instr_keys_setup_cmd: "Configure your API key",
     instr_keys_no_req: "No API key required (local)",
-    instr_keys_gcloud_cmd: "Run 'gcloud auth login'",
+    instr_keys_gemini: "Authentication handled by 'gemini' command",
     instr_keys_claude: "Run 'claude' to authenticate",
     instr_keys_openai: "export OPENAI_API_KEY=your_key",
     instr_run_title: "Running",
@@ -408,11 +412,11 @@ export const getCliToolLabel = (lang: AppLanguage, tool: CliTool): string => {
   const map: Record<CliTool, TranslationKey> = {
     [CliTool.MANUAL]: 'tool_manual',
     [CliTool.ANTIGRAVITY]: 'tool_antigravity',
-    [CliTool.LLM_CLI]: 'tool_llm',
-    [CliTool.GCLOUD]: 'tool_gcloud',
-    [CliTool.OLLAMA]: 'tool_ollama',
+    [CliTool.GEMINI_CLI]: 'tool_gemini',
     [CliTool.CLAUDE_CLI]: 'tool_claude',
-    [CliTool.OPENAI_CLI]: 'tool_openai'
+    [CliTool.OPENAI_CLI]: 'tool_openai',
+    [CliTool.OLLAMA]: 'tool_ollama',
+    [CliTool.CURL_DEEPSEEK]: 'tool_curl'
   };
   return getUiText(lang, map[tool]);
 };
