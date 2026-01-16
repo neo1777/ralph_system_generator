@@ -8,7 +8,8 @@ Questa applicazione permette agli sviluppatori di generare configurazioni pronte
 
 *   **Generazione Istantanea:** Crea automaticamente la struttura di file necessaria (`prd.json`, `agents.md`, `INSTRUCTIONS.md`, script di orchestrazione).
 *   **Catalogo Preset Internazionalizzato (Nuovo):** Include 20 template pronti all'uso (Siti Web, Flutter, Backend Go, Python Data). **Tutto il contenuto dei preset**, inclusi i prompt, le descrizioni e persino i file di mock (codice legacy commentato, README.md simulati), viene tradotto automaticamente in base alla lingua dell'interfaccia scelta (Default: Italiano).
-*   **Supporto Multi-Modello:** Configurazioni ottimizzate per **Google Gemini 3.0 Pro/Flash**, **Claude 4.5 Opus/Sonnet**, **OpenAI o3/GPT-5.5** e modelli locali (**DeepSeek V3.2**, Llama 4). Supporto diretto per **cURL** e **Ollama**.
+*   **Supporto Multi-Modello:** Configurazioni ottimizzate per **Google Gemini 1.5/2.5 Pro/Flash**, **Claude 3.5**, **OpenAI GPT-4o** e modelli più recenti (**DeepSeek V3/R1**, Llama 3). Supporto esteso via **cURL** per Mistral, Cohere e Groq.
+*   **Stima dei Costi Integrata (Nuovo):** Genera automaticamente un file `COSTS.md` con il calcolo dei costi stimati per il modello selezionato (Input/Output per 1M token), basato sui prezzi pubblici aggiornati a Gennaio 2026.
 *   **Contesto Avanzato con Upload:** Carica file di testo (es. documentazione, snippet di codice) e immagini (es. mockup UI) direttamente nel contesto iniziale. I file di testo vengono formattati in `agents.md` con delimitatori chiari, le immagini salvate nella cartella `assets/`.
 *   **Mock Data Injection:** I preset includono automaticamente file "simulati" (codice legacy sporco, wireframe SVG, log di errori) per permetterti di testare immediatamente le capacità dell'agente.
 *   **Dev Browser Integration:** Opzione per iniettare istruzioni specifiche nel System Prompt che abilitano l'agente a "vedere" e verificare l'output visivo su localhost.

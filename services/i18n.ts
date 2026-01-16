@@ -14,8 +14,9 @@ type TranslationKey =
   | 'desc_nix' | 'desc_instructions' | 'desc_prd' | 'desc_agents' | 'desc_progress'
   | 'desc_sys_prompt' | 'desc_tui' | 'desc_sh' | 'desc_ctx_img'
   | 'iface_bash' | 'iface_tui'
-  | 'iface_bash' | 'iface_tui'
-  | 'tool_manual' | 'tool_antigravity' | 'tool_gemini' | 'tool_claude' | 'tool_openai' | 'tool_ollama' | 'tool_curl';
+  | 'sys_model_label' | 'sys_goal_label'
+  | 'tool_manual' | 'tool_antigravity' | 'tool_gemini' | 'tool_claude' | 'tool_openai' | 'tool_ollama' | 'tool_curl'
+  | 'group_mistral' | 'group_cohere' | 'group_groq' | 'lbl_cost_est';
 
 type OutputKey =
   | 'prd_setup_title' | 'prd_setup_desc' | 'prd_criteria_setup'
@@ -25,7 +26,7 @@ type OutputKey =
   | 'script_criteria' | 'script_calling' | 'script_manual_check' | 'script_ask_success'
   | 'script_complete' | 'script_failed' | 'sys_prompt_core_rules' | 'sys_prompt_fresh'
   | 'sys_prompt_atomic' | 'sys_prompt_compound' | 'sys_prompt_verification'
-  | 'sys_intro_std' | 'sys_dev_browser' | 'sys_goal_label' | 'sys_model_label'
+  | 'sys_intro_std' | 'out_cost_file_desc' | 'sys_dev_browser'
   | 'task_analysis_title' | 'task_analysis_desc' | 'task_analysis_crit'
   | 'task_verify_title' | 'task_verify_desc' | 'task_verify_crit'
   | 'task_checklist_title' | 'task_checklist_desc' | 'task_checklist_crit'
@@ -93,12 +94,16 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     tool_claude: "Claude CLI (@anthropic-ai/claude-code)",
     tool_openai: "OpenAI Python CLI (pip install openai)",
     tool_ollama: "Ollama (Local)",
-    tool_curl: "cURL (DeepSeek / API)",
+    tool_curl: "cURL (DeepSeek / Mistral / Cohere / Groq)",
     group_google: "Google Gemini",
     group_anthropic: "Anthropic Claude",
     group_openai: "OpenAI",
     group_deepseek: "DeepSeek / Open Source",
+    group_mistral: "Mistral AI",
+    group_cohere: "Cohere",
+    group_groq: "Groq (Llama 3)",
     lbl_code: "Code",
+    lbl_cost_est: "Est. Cost / 1M Tokens",
     tip_download: "Download",
     tip_copy: "Copy",
     tip_remove: "Remove",
@@ -146,12 +151,9 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     sys_prompt_compound: "Compound Verification - Test thoroughly",
     sys_prompt_verification: "Manual Verification - Wait for human approval",
     sys_goal_label: "Goal",
-    sys_model_label: "Model",
+    out_cost_file_desc: "Estimated Cost Analysis for Project",
+    sys_model_label: "Target Model",
     sys_dev_browser: "You can use a dev browser to verify UI changes on localhost.",
-    agents_lessons_title: "Lessons Learned",
-    agents_lessons_hint: "Add discoveries and patterns here",
-    agents_gotchas_title: "Gotchas",
-    agents_gotchas_hint: "Document edge cases and issues",
     agents_init_ctx: "Initial Context",
     tui_waiting: "Press 'r' to run next task, 'q' to quit",
     tui_agent_act: "Agent Activity",
@@ -205,7 +207,7 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     instr_setup_claude: "npm install -g @anthropic-ai/claude-code",
     instr_setup_openai_step1: "Install OpenAI Python: pip install openai",
     instr_setup_openai_step2: "Also install 'jq' for JSON parsing",
-    instr_setup_curl: "Ensure 'curl' and 'jq' are installed",
+    instr_setup_curl: "Ensure 'curl' and 'jq' are installed (Standard in most generic environments)",
     instr_setup_manual: "Use your preferred AI CLI tool",
     instr_keys_title: "API Keys",
     instr_keys_setup_cmd: "Configure your API key",
@@ -310,6 +312,7 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     sys_prompt_compound: "Verifica Composta - Testa approfonditamente",
     sys_prompt_verification: "Verifica Manuale - Attendi approvazione umana",
     sys_goal_label: "Obiettivo",
+    out_cost_file_desc: "Analisi Stima Costi Progetto",
     sys_model_label: "Modello",
     sys_dev_browser: "Puoi usare un dev browser per verificare cambiamenti UI su localhost.",
     agents_lessons_title: "Lezioni Apprese",
@@ -416,7 +419,7 @@ export const getCliToolLabel = (lang: AppLanguage, tool: CliTool): string => {
     [CliTool.CLAUDE_CLI]: 'tool_claude',
     [CliTool.OPENAI_CLI]: 'tool_openai',
     [CliTool.OLLAMA]: 'tool_ollama',
-    [CliTool.CURL_DEEPSEEK]: 'tool_curl'
+    [CliTool.CURL]: 'tool_curl'
   };
   return getUiText(lang, map[tool]);
 };

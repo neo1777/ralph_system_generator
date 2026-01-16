@@ -28,7 +28,7 @@ export default function App() {
     return {
       projectName: 'MyRalphApp',
       goal: 'Create a Todo List app with React and LocalStorage',
-      model: AiModel.GOOGLE_GEMINI_3_PRO,
+      model: AiModel.GOOGLE_GEMINI_2_5_PRO,
       interfaceType: InterfaceType.BASH_BASIC,
       cliTool: CliTool.MANUAL,
       includeDevBrowser: true,
@@ -180,25 +180,32 @@ export default function App() {
 
   const groupedModels = {
     [t('group_google')]: [
-      AiModel.GOOGLE_GEMINI_3_PRO,
-      AiModel.GOOGLE_GEMINI_3_FLASH,
-      AiModel.GOOGLE_GEMINI_3_DEEP_THINK
+      AiModel.GOOGLE_GEMINI_2_5_FLASH,
+      AiModel.GOOGLE_GEMINI_2_5_PRO
     ],
     [t('group_anthropic')]: [
-      AiModel.CLAUDE_OPUS_4_5,
-      AiModel.CLAUDE_SONNET_4_5,
-      AiModel.CLAUDE_HAIKU_4_5
+      AiModel.CLAUDE_3_5_SONNET,
+      AiModel.CLAUDE_3_5_HAIKU,
+      AiModel.CLAUDE_3_OPUS
     ],
     [t('group_openai')]: [
-      AiModel.OPENAI_GPT_5_5,
-      AiModel.OPENAI_GPT_5_2,
-      AiModel.OPENAI_O3
+      AiModel.OPENAI_GPT_4O,
+      AiModel.OPENAI_GPT_4O_MINI
     ],
     [t('group_deepseek')]: [
-      AiModel.DEEPSEEK_V3_2,
-      AiModel.DEEPSEEK_V3_2_SPECIALE,
-      AiModel.LLAMA_4_SCOUT,
-      AiModel.LLAMA_4_MAVERICK
+      AiModel.DEEPSEEK_V3,
+      AiModel.DEEPSEEK_R1
+    ],
+    [t('group_mistral')]: [
+      AiModel.MISTRAL_SMALL,
+      AiModel.MISTRAL_LARGE
+    ],
+    [t('group_cohere')]: [
+      AiModel.COHERE_COMMAND_R_PLUS
+    ],
+    [t('group_groq')]: [
+      AiModel.GROQ_LLAMA_3_8B,
+      AiModel.GROQ_LLAMA_3_70B
     ]
   };
 

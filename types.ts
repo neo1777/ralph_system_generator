@@ -1,24 +1,3 @@
-export enum AiModel {
-  GOOGLE_GEMINI_3_PRO = 'Google Gemini 3.0 Pro',
-  GOOGLE_GEMINI_3_FLASH = 'Google Gemini 3.0 Flash',
-  GOOGLE_GEMINI_3_DEEP_THINK = 'Google Gemini 3.0 Deep Think',
-  CLAUDE_OPUS_4_5 = 'Claude Opus 4.5',
-  CLAUDE_SONNET_4_5 = 'Claude Sonnet 4.5',
-  CLAUDE_HAIKU_4_5 = 'Claude Haiku 4.5',
-  OPENAI_GPT_5_5 = 'OpenAI GPT-5.5',
-  OPENAI_GPT_5_2 = 'OpenAI GPT-5.2',
-  OPENAI_O3 = 'OpenAI o3 (Reasoning)',
-  DEEPSEEK_V3_2 = 'DeepSeek V3.2',
-  DEEPSEEK_V3_2_SPECIALE = 'DeepSeek V3.2 Speciale (Reasoning)',
-  LLAMA_4_SCOUT = 'Llama 4 Scout (109B)',
-  LLAMA_4_MAVERICK = 'Llama 4 Maverick (400B)'
-}
-
-export enum InterfaceType {
-  BASH_BASIC = 'Basic Bash Loop',
-  TUI = 'Ralph TUI (Terminal UI)'
-}
-
 export enum CliTool {
   MANUAL = 'Manual / Template (Safe Mode)',
   ANTIGRAVITY = 'Google Antigravity / Project IDX (Cloud IDE)',
@@ -26,7 +5,42 @@ export enum CliTool {
   CLAUDE_CLI = 'Anthropic Claude CLI (@anthropic-ai/claude-code)',
   OPENAI_CLI = 'OpenAI Python CLI (pip install openai)',
   OLLAMA = 'Ollama (Local)',
-  CURL_DEEPSEEK = 'cURL (Standard API / DeepSeek)'
+  CURL = 'cURL (DeepSeek / Mistral / Cohere / Groq)'
+}
+
+export interface CostEstimate {
+  inputPer1M: number;
+  outputPer1M: number;
+  currency: string;
+}
+
+export enum InterfaceType {
+  BASH_BASIC = 'Basic Bash Loop',
+  TUI = 'Ralph TUI (Terminal UI)'
+}
+
+export enum AiModel {
+  // Google
+  GOOGLE_GEMINI_2_5_FLASH = 'Gemini 1.5 Flash (Google)',
+  GOOGLE_GEMINI_2_5_PRO = 'Gemini 1.5 Pro (Google)',
+  // Anthropic
+  CLAUDE_3_5_SONNET = 'Claude 3.5 Sonnet (Anthropic)',
+  CLAUDE_3_5_HAIKU = 'Claude 3.5 Haiku (Anthropic)',
+  CLAUDE_3_OPUS = 'Claude 3 Opus (Anthropic)',
+  // OpenAI
+  OPENAI_GPT_4O = 'GPT-4o (OpenAI)',
+  OPENAI_GPT_4O_MINI = 'GPT-4o Mini (OpenAI)',
+  // DeepSeek
+  DEEPSEEK_V3 = 'DeepSeek V3 (DeepSeek)',
+  DEEPSEEK_R1 = 'DeepSeek R1 (DeepSeek)',
+  // Mistral
+  MISTRAL_SMALL = 'Mistral Small (Mistral)',
+  MISTRAL_LARGE = 'Mistral Large (Mistral)',
+  // Cohere
+  COHERE_COMMAND_R_PLUS = 'Command R+ (Cohere)',
+  // Groq
+  GROQ_LLAMA_3_8B = 'Llama 3 8B (Groq)',
+  GROQ_LLAMA_3_70B = 'Llama 3 70B (Groq)'
 }
 
 export enum AppLanguage {

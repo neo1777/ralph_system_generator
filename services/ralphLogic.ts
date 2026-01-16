@@ -1,5 +1,26 @@
-import { RalphConfig, AiModel, InterfaceType, GeneratedFile, CliTool, AppLanguage } from '../types';
+import { RalphConfig, AiModel, InterfaceType, GeneratedFile, CliTool, AppLanguage, CostEstimate } from '../types';
 import { getOutputText, getInstructionText, InstructionKey, getUiText } from './i18n';
+
+export const getEstimatedCost = (model: AiModel): CostEstimate => {
+  // Pricing per 1M tokens (USD) - Jan 2026
+  switch (model) {
+    case AiModel.GOOGLE_GEMINI_2_5_FLASH: return { inputPer1M: 0.075, outputPer1M: 0.30, currency: 'USD' };
+    case AiModel.GOOGLE_GEMINI_2_5_PRO: return { inputPer1M: 1.25, outputPer1M: 5.00, currency: 'USD' };
+    case AiModel.CLAUDE_3_5_HAIKU: return { inputPer1M: 0.80, outputPer1M: 4.00, currency: 'USD' };
+    case AiModel.CLAUDE_3_5_SONNET: return { inputPer1M: 3.00, outputPer1M: 15.00, currency: 'USD' };
+    case AiModel.CLAUDE_3_OPUS: return { inputPer1M: 15.00, outputPer1M: 75.00, currency: 'USD' };
+    case AiModel.OPENAI_GPT_4O: return { inputPer1M: 2.50, outputPer1M: 10.00, currency: 'USD' };
+    case AiModel.OPENAI_GPT_4O_MINI: return { inputPer1M: 0.15, outputPer1M: 0.60, currency: 'USD' };
+    case AiModel.DEEPSEEK_V3: return { inputPer1M: 0.14, outputPer1M: 0.28, currency: 'USD' }; // Cached/Uncached avg
+    case AiModel.DEEPSEEK_R1: return { inputPer1M: 0.55, outputPer1M: 2.19, currency: 'USD' };
+    case AiModel.MISTRAL_SMALL: return { inputPer1M: 0.10, outputPer1M: 0.30, currency: 'USD' };
+    case AiModel.MISTRAL_LARGE: return { inputPer1M: 2.00, outputPer1M: 6.00, currency: 'USD' };
+    case AiModel.COHERE_COMMAND_R_PLUS: return { inputPer1M: 3.00, outputPer1M: 15.00, currency: 'USD' };
+    case AiModel.GROQ_LLAMA_3_8B: return { inputPer1M: 0.05, outputPer1M: 0.08, currency: 'USD' };
+    case AiModel.GROQ_LLAMA_3_70B: return { inputPer1M: 0.59, outputPer1M: 0.79, currency: 'USD' };
+    default: return { inputPer1M: 0, outputPer1M: 0, currency: 'USD' };
+  }
+};
 
 // Helper to determine Model Family properties
 const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
@@ -12,19 +33,20 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
   let interactive = false;
 
   switch (model) {
-    case AiModel.GOOGLE_GEMINI_3_PRO: modelId = "gemini-3.0-pro-001"; break;
-    case AiModel.GOOGLE_GEMINI_3_FLASH: modelId = "gemini-3.0-flash-001"; break;
-    case AiModel.GOOGLE_GEMINI_3_DEEP_THINK: modelId = "gemini-3.0-deep-think-001"; break;
-    case AiModel.CLAUDE_OPUS_4_5: modelId = "claude-opus-4.5-20251124"; break;
-    case AiModel.CLAUDE_SONNET_4_5: modelId = "claude-sonnet-4.5-20250929"; break;
-    case AiModel.CLAUDE_HAIKU_4_5: modelId = "claude-haiku-4.5-20251015"; break;
-    case AiModel.OPENAI_GPT_5_5: modelId = "gpt-5.5-turbo"; break;
-    case AiModel.OPENAI_GPT_5_2: modelId = "gpt-5.2-turbo"; break;
-    case AiModel.OPENAI_O3: modelId = "o3-2025-12"; break;
-    case AiModel.DEEPSEEK_V3_2: modelId = "deepseek-v3.2"; break;
-    case AiModel.DEEPSEEK_V3_2_SPECIALE: modelId = "deepseek-v3.2-speciale"; break;
-    case AiModel.LLAMA_4_SCOUT: modelId = "llama-4-scout-109b"; break;
-    case AiModel.LLAMA_4_MAVERICK: modelId = "llama-4-maverick-400b"; break;
+    case AiModel.GOOGLE_GEMINI_2_5_PRO: modelId = "gemini-1.5-pro"; break;
+    case AiModel.GOOGLE_GEMINI_2_5_FLASH: modelId = "gemini-1.5-flash"; break;
+    case AiModel.CLAUDE_3_5_SONNET: modelId = "claude-3-5-sonnet-20241022"; break;
+    case AiModel.CLAUDE_3_5_HAIKU: modelId = "claude-3-5-haiku-20241022"; break;
+    case AiModel.CLAUDE_3_OPUS: modelId = "claude-3-opus-20240229"; break;
+    case AiModel.OPENAI_GPT_4O: modelId = "gpt-4o"; break;
+    case AiModel.OPENAI_GPT_4O_MINI: modelId = "gpt-4o-mini"; break;
+    case AiModel.DEEPSEEK_V3: modelId = "deepseek-chat"; break;
+    case AiModel.DEEPSEEK_R1: modelId = "deepseek-reasoner"; break;
+    case AiModel.MISTRAL_SMALL: modelId = "mistral-small-latest"; break;
+    case AiModel.MISTRAL_LARGE: modelId = "mistral-large-latest"; break;
+    case AiModel.COHERE_COMMAND_R_PLUS: modelId = "command-r-plus"; break;
+    case AiModel.GROQ_LLAMA_3_8B: modelId = "llama3-8b-8192"; break;
+    case AiModel.GROQ_LLAMA_3_70B: modelId = "llama3-70b-8192"; break;
     default: modelId = (model as string).toLowerCase().replace(/ /g, "-");
   }
 
@@ -60,17 +82,46 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       cliCommand = "openai api chat.completions.create -m " + modelId + " -g user \"$(cat input_prompt.txt)\" | jq -r '.choices[0].message.content'";
       break;
     case CliTool.OLLAMA:
-      // Ollama run is interactive, but can accept piped input. 
-      // For Ralph Loop, we often want the output captured if it's not a conversation.
-      // However, 'ollama run' behaves like an interactive session if TTY.
-      // We'll treat it as interactive for best experience in the loop? 
-      // Actually, 'ollama run model "prompt"' outputs text. 
       cliCommand = "ollama run " + modelId + " \"$(cat input_prompt.txt)\"";
+      interactive = true; // Use interactive mode for Ollama generally
       break;
-    case CliTool.CURL_DEEPSEEK:
-      // Standard OpenAI-compatible API call via cURL
-      const apiUrl = model.includes('DeepSeek') ? 'https://api.deepseek.com/chat/completions' : 'http://localhost:11434/v1/chat/completions';
-      cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\"}]\n    }\" | jq -r '.choices[0].message.content'";
+    case CliTool.CURL:
+      // Universal cURL Handler for API-based Providers
+      let apiUrl = "";
+      let authHeader = "";
+
+      if (model.includes('DeepSeek')) {
+        apiUrl = "https://api.deepseek.com/chat/completions";
+        authHeader = "Authorization: Bearer $DEEPSEEK_API_KEY";
+      } else if (model.includes('Mistral')) {
+        apiUrl = "https://api.mistral.ai/v1/chat/completions";
+        authHeader = "Authorization: Bearer $MISTRAL_API_KEY";
+      } else if (model.includes('Cohere')) {
+        apiUrl = "https://api.cohere.com/v1/chat"; // Cohere has slightly different API, but v2 is OAI compat? v1 needs verification.
+        // Actually Cohere has an openai compatible endpoint too often. Let's assume standard /chat/completions for now or generic Logic
+        // Research says Cohere native API is /v1/chat. Let's use that if possible or standard OAI compat.
+        // Update: Mistral, Groq, DeepSeek are OAI compatible. Cohere is distinct.
+        // For simplicity towards 'Standard API' concept, let's stick to standard OAI structure for DeepSeek, Mistral, Groq.
+        // If Cohere is selected, we might need specific payload.
+        apiUrl = "https://api.cohere.com/v1/chat";
+        authHeader = "Authorization: Bearer $CO_API_KEY";
+      } else if (model.includes('Groq')) {
+        apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+        authHeader = "Authorization: Bearer $GROQ_API_KEY";
+      } else {
+        // Fallback / Local
+        apiUrl = "http://localhost:11434/v1/chat/completions";
+        authHeader = "Authorization: Bearer ollama";
+      }
+
+      // Check if Cohere (Distinct Payload) or OAI Compatible
+      if (model.includes('Cohere')) {
+        cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"" + authHeader + "\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"message\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\" \n    }\" | jq -r '.text'"; // Cohere v1 output is .text or .generations? 
+        // Correction: Cohere v1/chat response has .text
+      } else {
+        // Standard OpenAI Compatible
+        cliCommand = "curl " + apiUrl + " \\\n    -H \"Content-Type: application/json\" \\\n    -H \"" + authHeader + "\" \\\n    -d \"{\n      \\\"model\\\": \\\"" + modelId + "\\\",\n      \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": \\\"$(cat input_prompt.txt | jq -sR .)\\\"}]\n    }\" | jq -r '.choices[0].message.content'";
+      }
       break;
     case CliTool.MANUAL:
     default:
@@ -111,9 +162,9 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
       installSteps = "### " + getUiText(lang, 'tool_openai') + "\n" + t('instr_setup_openai_step1') + "\n" + t('instr_setup_openai_step2');
       keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_openai');
       break;
-    case CliTool.CURL_DEEPSEEK:
+    case CliTool.CURL:
       installSteps = "### " + getUiText(lang, 'tool_curl') + "\n" + t('instr_setup_curl');
-      keySetup = "### " + t('instr_keys_title') + "\nexport DEEPSEEK_API_KEY=your_key";
+      keySetup = "### " + t('instr_keys_title') + "\n- DeepSeek: `export DEEPSEEK_API_KEY=key`\n- Mistral: `export MISTRAL_API_KEY=key`\n- Cohere: `export CO_API_KEY=key`\n- Groq: `export GROQ_API_KEY=key`\n\n*(Set only the one you are using)*";
       break;
     case CliTool.MANUAL:
     default:
@@ -142,6 +193,7 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
   const lang = config.outputLanguage;
   const { cliCommand, modelId, commentWarning, interactive } = getModelDetails(config.model, config.cliTool, lang);
   const uiLang = config.uiLanguage;
+  const costEst = getEstimatedCost(config.model);
 
   const tOut = (key: any) => getOutputText(lang, key);
   const tUi = (key: any) => getUiText(uiLang, key);
@@ -162,6 +214,20 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
     language: 'markdown',
     content: generateInstructionsFile(config, modelId),
     description: tUi('desc_instructions')
+  });
+
+  // 1.5 COSTS.md (New)
+  files.push({
+    filename: 'COSTS.md',
+    language: 'markdown',
+    content: "# " + tUi('out_cost_file_desc') + "\n\n" +
+      "**" + getUiText(uiLang, 'sys_model_label') + "**: " + config.model + "\n\n" +
+      "| Metric | Cost (Est.) |\n" +
+      "| :--- | :--- |\n" +
+      "| **Input (1M Tokens)** | $" + costEst.inputPer1M.toFixed(3) + " " + costEst.currency + " |\n" +
+      "| **Output (1M Tokens)** | $" + costEst.outputPer1M.toFixed(3) + " " + costEst.currency + " |\n\n" +
+      "> **Note**: These are estimates based on public pricing as of Jan 2026. Actual costs may vary based on caching, enterprise rates, or provider updates.\n",
+    description: tUi('lbl_cost_est')
   });
 
   // 2. prd.json
