@@ -9,6 +9,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
   let modelId = "";
   let cliCommand = "";
   let commentWarning = false;
+  let interactive = false;
 
   switch (model) {
     case AiModel.GOOGLE_GEMINI_3_PRO: modelId = "gemini-3.0-pro-001"; break;
@@ -52,7 +53,8 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.CLAUDE_CLI:
       if (model.includes('Claude')) {
-        cliCommand = "cat input_prompt.txt | claude --print";
+        cliCommand = "cat input_prompt.txt | claude";
+        interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_claude_model');
         commentWarning = true;
@@ -68,7 +70,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
   }
 
-  return { isReasoning, cliCommand, modelId, commentWarning, isGoogle };
+  return { isReasoning, cliCommand, modelId, commentWarning, isGoogle, interactive };
 };
 
 const generateInstructionsFile = (config: RalphConfig, modelId: string): string => {
@@ -129,7 +131,7 @@ const dataURLToBlob = (dataURL: string): Blob => {
 export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
   const files: GeneratedFile[] = [];
   const lang = config.outputLanguage;
-  const { cliCommand, modelId, commentWarning } = getModelDetails(config.model, config.cliTool, lang);
+  const { cliCommand, modelId, commentWarning, interactive } = getModelDetails(config.model, config.cliTool, lang);
   const uiLang = config.uiLanguage;
 
   const tOut = (key: any) => getOutputText(lang, key);
@@ -226,7 +228,11 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
     if (commentWarning) {
       executionBlock = "  # 3. Call the Agent (Placeholder)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  " + cliCommand + "\n  # OUTPUT=\"... simulated output ...\"";
     } else {
-      executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
+      if (interactive) {
+        executionBlock = "  # 3. Call the Agent (REAL EXECUTION - Interactive)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  " + cliCommand + "\n";
+      } else {
+        executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
+      }
     }
 
     const bashScript = "#!/bin/bash\n# " + tOut('sh_orchestrator_for') + " " + config.projectName + "\n# " + tOut('sh_optimized_for') + ": " + config.model + "\n# " + tOut('sh_cli_tool') + ": " + config.cliTool + "\n\nPRD_FILE=\"prd.json\"\nMEMORY_FILE=\"agents.md\"\nPROGRESS_FILE=\"progress.txt\"\n\nif ! command -v jq &> /dev/null; then\n    echo \"" + tOut('sh_jq_req') + " " + (config.cliTool === CliTool.ANTIGRAVITY ? 'Add to dev.nix' : tOut('sh_install_it')) + "\"\n    exit 1\nfi\n\necho \"" + tOut('script_start') + " " + config.projectName + "...\"\n\nwhile true; do\n  TASK_ID=$(jq -r 'map(select(.passes == false)) | .[0].id' $PRD_FILE)\n  if [ \"$TASK_ID\" == \"null\" ]; then\n    echo \"✅ " + tOut('script_all_passed') + "\"\n    break\n  fi\n\n  TASK_DESC=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].description\" $PRD_FILE)\n  CRITERIA=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].acceptance_criteria\" $PRD_FILE)\n\n  echo \"---------------------------------------------------\"\n  echo \"🤖 " + tOut('script_working') + " #$TASK_ID\"\n  echo \"---------------------------------------------------\"\n\ncat system_instruction.txt > input_prompt.txt\necho \"\" >> input_prompt.txt\ncat <<EOF >> input_prompt.txt\nCONTEXT: $(cat $MEMORY_FILE)\nTASK: $TASK_DESC\nCRITERIA: $CRITERIA\nEOF\n\n" + executionBlock + "\n\n  read -p \"" + tOut('script_manual_check') + " \" RESULT\n\n  if [ \"$RESULT\" == \"y\" ]; then\n    echo \"✨ " + tOut('script_ask_success') + "\"\n    git add .\n    git commit -m \"" + tOut('git_task_commit') + " $TASK_ID\"\n    tmp=$(mktemp)\n    jq \"map(if .id == $TASK_ID then .passes = true else . end)\" $PRD_FILE > \"$tmp\" && mv \"$tmp\" $PRD_FILE\n    echo \"Iter $(date): " + tOut('script_complete') + " $TASK_ID\" >> $PROGRESS_FILE\n  else\n    echo \"❌ " + tOut('script_failed') + "\"\n    echo \"Iter $(date): Failed Task $TASK_ID\" >> $PROGRESS_FILE\n  fi\n  sleep 2\ndone\n";
