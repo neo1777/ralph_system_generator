@@ -47,7 +47,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.GEMINI_CLI:
       if (isGoogle) {
-        cliCommand = "gemini run -m " + modelId + " < input_prompt.txt";
+        cliCommand = "cat input_prompt.txt | gemini";
         interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_google_model');
@@ -56,7 +56,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.CLAUDE_CLI:
       if (model.includes('Claude')) {
-        cliCommand = "claude run -m " + modelId + " < input_prompt.txt";
+        cliCommand = "cat input_prompt.txt | claude";
         interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_claude_model');
@@ -64,10 +64,11 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       }
       break;
     case CliTool.OPENAI_CLI:
-      cliCommand = "openai-codex run -m " + modelId + " < input_prompt.txt";
+      cliCommand = "cat input_prompt.txt | codex";
+      interactive = true;
       break;
     case CliTool.OLLAMA:
-      cliCommand = "ollama run " + modelId + " < input_prompt.txt";
+      cliCommand = "cat input_prompt.txt | ollama run " + modelId;
       interactive = true;
       break;
     case CliTool.CURL:
@@ -135,7 +136,7 @@ const generateInstructionsFile = (config: RalphConfig, modelId: string): string 
       keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_claude');
       break;
     case CliTool.OPENAI_CLI:
-      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n1. Install Official OpenAI Codex CLI:\n   npm install -g @openai/codex\n2. Run:\n   openai-codex run";
+      installSteps = "### " + getUiText(lang, 'tool_openai') + "\n1. Install Official OpenAI Codex CLI:\n   npm install -g @openai/codex\n2. Run:\n   codex";
       keySetup = "### " + t('instr_keys_title') + "\n" + t('instr_keys_openai');
       break;
     case CliTool.CURL:
