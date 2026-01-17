@@ -67,7 +67,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       cliCommand = "openai-codex run -m " + modelId + " < input_prompt.txt";
       break;
     case CliTool.OLLAMA:
-      cliCommand = "ollama run " + modelId + " \"$(cat input_prompt.txt)\"";
+      cliCommand = "ollama run " + modelId + " < input_prompt.txt";
       interactive = true;
       break;
     case CliTool.CURL:
