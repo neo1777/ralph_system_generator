@@ -1,0 +1,1 @@
+Iter 0: Sessione Ralph inizializzata con modello claude-sonnet-4-5.

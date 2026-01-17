@@ -43,11 +43,17 @@ try {
         process.exit(1);
     }
 
-    if (bashScript.content.includes('cat system_instruction.txt > input_prompt.txt')) {
-        console.log("✅ Bash script contains system_instruction logic.");
+    if (bashScript.content.includes('[ -f "$SYS_PROMPT" ] && cat "$SYS_PROMPT" > input_prompt.txt')) {
+        console.log("✅ Bash script contains robust system_instruction logic.");
     } else {
-        console.error("❌ Bash script MISSING system_instruction logic!");
-        console.log("Content preview:\n", bashScript.content.substring(500, 1000));
+        console.error("❌ Bash script MISSING robust system_instruction logic!");
+        process.exit(1);
+    }
+
+    if (bashScript.content.includes("TASK_ID=$(jq -r '.items | map(select(.passes == false)) | .[0].id' \"$PRD_FILE\")")) {
+        console.log("✅ Bash script contains correct jq path for .items.");
+    } else {
+        console.error("❌ Bash script MISSING correct jq path!");
         process.exit(1);
     }
 
@@ -60,11 +66,25 @@ try {
         process.exit(1);
     }
 
-    if (tuiScript.content.includes("if os.path.exists('system_instruction.txt'):")) {
-        console.log("✅ TUI script contains system_instruction logic.");
+    if (tuiScript.content.includes("sys_file = os.path.join(SCRIPT_DIR, 'system_instruction.txt')")) {
+        console.log("✅ TUI script contains directory-aware logic.");
     } else {
-        console.error("❌ TUI script MISSING system_instruction logic!");
-        console.log("Content preview:\n", tuiScript.content.substring(400, 800));
+        console.error("❌ TUI script MISSING directory-aware logic!");
+        process.exit(1);
+    }
+
+    // Test 3: Claude CLI command
+    const mockConfigClaude: RalphConfig = {
+        ...mockConfig,
+        cliTool: CliTool.CLAUDE_CLI,
+        model: AiModel.CLAUDE_4_5_SONNET
+    };
+    const filesClaude = generateRalphSystem(mockConfigClaude);
+    const bashClaude = filesClaude.find(f => f.filename === 'run_ralph.sh');
+    if (bashClaude?.content.includes("claude run -m")) {
+        console.log("✅ Claude CLI command is correct ('claude' instead of 'claude-code').");
+    } else {
+        console.error("❌ Claude CLI command is INCORRECT!");
         process.exit(1);
     }
 

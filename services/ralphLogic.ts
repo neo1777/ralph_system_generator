@@ -56,7 +56,7 @@ const getModelDetails = (model: AiModel, tool: CliTool, lang: AppLanguage) => {
       break;
     case CliTool.CLAUDE_CLI:
       if (model.includes('Claude')) {
-        cliCommand = "claude-code run -m " + modelId + " < input_prompt.txt";
+        cliCommand = "claude run -m " + modelId + " < input_prompt.txt";
         interactive = true;
       } else {
         cliCommand = "# " + getOutputText(lang, 'err_claude_model');
@@ -277,7 +277,7 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
 
   // 7. Orchestration (BASH or TUI)
   if (config.interfaceType === InterfaceType.TUI) {
-    const tuiScript = "import curses\nimport json\nimport time\nimport os\nimport sys\nimport subprocess\n\ndef load_prd():\n    if not os.path.exists('prd.json'):\n        return None, \"" + tOut('tui_err_load') + "\"\n    try:\n        with open('prd.json', 'r') as f:\n            return json.load(f), \"\"\n    except json.JSONDecodeError:\n        return None, \"" + tOut('tui_err_json') + "\"\n    except Exception as e:\n        return None, f\"" + tOut('tui_err_gen') + ": {str(e)}\"\n\ndef save_prd(data):\n    try:\n        with open('prd.json', 'w') as f:\n            json.dump(data, f, indent=2)\n        return True, \"" + tOut('tui_success_save') + "\"\n    except Exception as e:\n        return False, f\"" + tOut('tui_err_save') + ": {str(e)}\"\n\ndef main(stdscr):\n    curses.start_color()\n    curses.use_default_colors()\n    try:\n        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)\n        curses.init_pair(2, curses.COLOR_GREEN, -1)\n        curses.init_pair(3, curses.COLOR_RED, -1)\n        curses.init_pair(4, curses.COLOR_CYAN, -1)\n    except:\n        pass\n\n    status_msg = \"" + tOut('tui_waiting') + "\"\n    status_type = 4\n\n    while True:\n        stdscr.clear()\n        h, w = stdscr.getmaxyx()\n        title = \" " + tOut('tui_title') + " - " + config.projectName + " \"\n        try:\n            stdscr.attron(curses.color_pair(1))\n            stdscr.addstr(0, 0, title + ' ' * (w - len(title)))\n            stdscr.attroff(curses.color_pair(1))\n        except curses.error:\n            pass\n\n        prd, load_err = load_prd()\n        row = 2\n        if prd is None:\n            stdscr.addstr(row, 2, load_err, curses.color_pair(3))\n            stdscr.refresh()\n            time.sleep(2)\n            break\n\n        for task in prd:\n            if row >= h - 4: break\n            is_pass = task.get('passes', False)\n            symbol = '[x]' if is_pass else '[ ]'\n            color = curses.color_pair(2) if is_pass else curses.A_NORMAL\n            line = f\"{symbol} {task.get('id', '?')}: {task.get('title', 'Unknown')}\"\n            stdscr.addstr(row, 2, line[:w-4], color)\n            row += 1\n\n        stdscr.addstr(row + 1, 2, '--- " + tOut('tui_agent_act') + " (" + modelId + ") ---')\n        stdscr.addstr(row + 3, 2, status_msg, curses.color_pair(status_type))\n        stdscr.refresh()\n\n        key = stdscr.getch()\n        if key == ord('q'): break\n        elif key == ord('r'):\n            next_task = next((t for t in prd if not t.get('passes')), None)\n            if next_task is None:\n                status_msg = '" + tOut('tui_all_done') + "'\n                status_type = 2\n                continue\n\n            status_msg = f'" + tOut('tui_running') + " {next_task.get(\"id\")}...'\n            stdscr.addstr(row + 3, 2, status_msg, curses.color_pair(4))\n            stdscr.refresh()\n\n            with open('input_prompt.txt', 'w') as f:\n                if os.path.exists('system_instruction.txt'):\n                    with open('system_instruction.txt', 'r') as sy: f.write(sy.read() + '\\n\\n')\n                f.write(f'" + tOut('tui_context_label') + ": ')\n                if os.path.exists('agents.md'):\n                    with open('agents.md', 'r') as m: f.write(m.read())\n                f.write(f'\\n" + tOut('tui_task_label') + ": {next_task.get(\"description\", \"\")}\\n" + tOut('tui_criteria_label') + ": {next_task.get(\"acceptance_criteria\", \"\")}')\n\n            try:\n                cmd = \"\"\"" + cliCommand + "\"\"\"\n                stdscr.endwin()\n                print('\\n" + tOut('tui_calling_agent') + "')\n                subprocess.run(cmd, shell=True)\n                result = input('\\n" + tOut('script_manual_check') + " ')\n                stdscr = curses.initscr()\n\n                if result.lower() == 'y':\n                    next_task['passes'] = True\n                    subprocess.run(['git', 'add', '.'], check=False)\n                    subprocess.run(['git', 'commit', '-m', f'" + tOut('git_task_commit') + " {next_task.get(\"id\")}'], check=False)\n                    status_msg = '" + tOut('tui_success_save') + "'\n                    status_type = 2\n                else:\n                    status_msg = '" + tOut('script_failed') + "'\n                    status_type = 3\n            except Exception as e:\n                stdscr = curses.initscr()\n                status_msg = f'Error: {str(e)}'\n                status_type = 3\n            save_prd(prd)\n\nif __name__ == '__main__':\n    curses.wrapper(main)\n";
+    const tuiScript = "import curses\nimport json\nimport time\nimport os\nimport sys\nimport subprocess\n\nSCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))\nPRD_FILE = os.path.join(SCRIPT_DIR, 'prd.json')\n\ndef load_prd():\n    if not os.path.exists(PRD_FILE):\n        return None, \"" + tOut('tui_err_load') + "\"\n    try:\n        with open(PRD_FILE, 'r') as f:\n            data = json.load(f)\n            # Support both root array and {items: []} structure\n            if isinstance(data, dict) and 'items' in data:\n                return data, \"\"\n            elif isinstance(data, list):\n                return {'items': data}, \"\"\n            return None, \"" + tOut('tui_err_json') + "\"\n    except json.JSONDecodeError:\n        return None, \"" + tOut('tui_err_json') + "\"\n    except Exception as e:\n        return None, f\"" + tOut('tui_err_gen') + ": {str(e)}\"\n\ndef save_prd(data):\n    try:\n        with open(PRD_FILE, 'w') as f:\n            json.dump(data, f, indent=2)\n        return True, \"" + tOut('tui_success_save') + "\"\n    except Exception as e:\n        return False, f\"" + tOut('tui_err_save') + ": {str(e)}\"\n\ndef main(stdscr):\n    curses.start_color()\n    curses.use_default_colors()\n    try:\n        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)\n        curses.init_pair(2, curses.COLOR_GREEN, -1)\n        curses.init_pair(3, curses.COLOR_RED, -1)\n        curses.init_pair(4, curses.COLOR_CYAN, -1)\n    except:\n        pass\n\n    status_msg = \"" + tOut('tui_waiting') + "\"\n    status_type = 4\n\n    while True:\n        stdscr.clear()\n        h, w = stdscr.getmaxyx()\n        title = \" " + tOut('tui_title') + " - " + config.projectName + " \"\n        try:\n            stdscr.attron(curses.color_pair(1))\n            stdscr.addstr(0, 0, title + ' ' * (w - len(title)))\n            stdscr.attroff(curses.color_pair(1))\n        except curses.error:\n            pass\n\n        prd_data, load_err = load_prd()\n        row = 2\n        if prd_data is None:\n            stdscr.addstr(row, 2, load_err, curses.color_pair(3))\n            stdscr.refresh()\n            time.sleep(2)\n            break\n\n        tasks = prd_data.get('items', [])\n        for task in tasks:\n            if row >= h - 4: break\n            is_pass = task.get('passes', False)\n            symbol = '[x]' if is_pass else '[ ]'\n            color = curses.color_pair(2) if is_pass else curses.A_NORMAL\n            line = f\"{symbol} {task.get('id', '?')}: {task.get('title', 'Unknown')}\"\n            stdscr.addstr(row, 2, line[:w-4], color)\n            row += 1\n\n        stdscr.addstr(row + 1, 2, '--- " + tOut('tui_agent_act') + " (" + modelId + ") ---')\n        stdscr.addstr(row + 3, 2, status_msg, curses.color_pair(status_type))\n        stdscr.refresh()\n\n        key = stdscr.getch()\n        if key == ord('q'): break\n        elif key == ord('r'):\n            next_task = next((t for t in tasks if not t.get('passes')), None)\n            if next_task is None:\n                status_msg = '" + tOut('tui_all_done') + "'\n                status_type = 2\n                continue\n\n            status_msg = f'" + tOut('tui_running') + " {next_task.get(\"id\")}...'\n            stdscr.addstr(row + 3, 2, status_msg, curses.color_pair(4))\n            stdscr.refresh()\n\n            with open('input_prompt.txt', 'w') as f:\n                sys_file = os.path.join(SCRIPT_DIR, 'system_instruction.txt')\n                if os.path.exists(sys_file):\n                    with open(sys_file, 'r') as sy: f.write(sy.read() + '\\n\\n')\n                f.write(f'\" + tOut('tui_context_label') + \": ')\n                mem_file = os.path.join(SCRIPT_DIR, 'agents.md')\n                if os.path.exists(mem_file):\n                    with open(mem_file, 'r') as m: f.write(m.read())\n                f.write(f'\\n\" + tOut('tui_task_label') + \": {next_task.get(\"description\", \"\")}\\n\" + tOut('tui_criteria_label') + \": {next_task.get(\"acceptance_criteria\", \"\")}')\n\n            try:\n                cmd = \"\"\"" + cliCommand + "\"\"\"\n                stdscr.endwin()\n                print('\\n\" + tOut('tui_calling_agent') + \"')\n                subprocess.run(cmd, shell=True)\n                result = input('\\n\" + tOut('script_manual_check') + \" ')\n                stdscr = curses.initscr()\n\n                if result.lower() == 'y':\n                    next_task['passes'] = True\n                    subprocess.run(['git', 'add', '.'], check=False)\n                    subprocess.run(['git', 'commit', '-m', f'\" + tOut('git_task_commit') + \" {next_task.get(\"id\")}'], check=False)\n                    status_msg = '\" + tOut('tui_success_save') + \"'\n                    status_type = 2\n                else:\n                    status_msg = '\" + tOut('script_failed') + \"'\n                    status_type = 3\n            except Exception as e:\n                stdscr = curses.initscr()\n                status_msg = f'Error: {str(e)}'\n                status_type = 3\n            save_prd(prd_data)\n\nif __name__ == '__main__':\n    curses.wrapper(main)\n";
 
     files.push({ filename: 'ralph_tui.py', language: 'python', content: tuiScript, description: tUi('desc_tui') });
     files.push({
@@ -296,11 +296,62 @@ export const generateRalphSystem = (config: RalphConfig): GeneratedFile[] => {
       if (interactive) {
         executionBlock = "  # 3. Call the Agent (REAL EXECUTION - Interactive)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  " + cliCommand + "\n";
       } else {
-        executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  if [ \"" + config.cliTool + "\" == \"" + CliTool.CURL + "\" ]; then\n    python3 payload_gen.py \"$TASK_DESC\" > input_payload.json\n  fi\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
+        executionBlock = "  # 3. Call the Agent (REAL EXECUTION)\n  echo \">> " + tOut('script_calling') + " " + config.model + "...\"\n  if [ \"" + config.cliTool + "\" == \"" + CliTool.CURL + "\" ]; then\n    python3 \"$SCRIPT_DIR/payload_gen.py\" \"$TASK_DESC\" > input_payload.json\n  fi\n  OUTPUT=$(" + cliCommand + ")\n  echo \"$OUTPUT\"";
       }
     }
 
-    const bashScript = "#!/bin/bash\n# " + tOut('sh_orchestrator_for') + " " + config.projectName + "\n# " + tOut('sh_optimized_for') + ": " + config.model + "\n# " + tOut('sh_cli_tool') + ": " + config.cliTool + "\n\nPRD_FILE=\"prd.json\"\nMEMORY_FILE=\"agents.md\"\nPROGRESS_FILE=\"progress.txt\"\n\nif ! command -v jq &> /dev/null; then\n    echo \"" + tOut('sh_jq_req') + " " + (config.cliTool === CliTool.ANTIGRAVITY ? 'Add to dev.nix' : tOut('sh_install_it')) + "\"\n    exit 1\nfi\n\necho \"" + tOut('script_start') + " " + config.projectName + "...\"\n\nwhile true; do\n  TASK_ID=$(jq -r 'map(select(.passes == false)) | .[0].id' $PRD_FILE)\n  if [ \"$TASK_ID\" == \"null\" ]; then\n    echo \"✅ " + tOut('script_all_passed') + "\"\n    break\n  fi\n\n  TASK_DESC=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].description\" $PRD_FILE)\n  CRITERIA=$(jq -r \"map(select(.id == $TASK_ID)) | .[0].acceptance_criteria\" $PRD_FILE)\n\n  echo \"---------------------------------------------------\"\n  echo \"🤖 " + tOut('script_working') + " #$TASK_ID\"\n  echo \"---------------------------------------------------\"\n\ncat system_instruction.txt > input_prompt.txt\necho \"\" >> input_prompt.txt\ncat <<EOF >> input_prompt.txt\nCONTEXT: $(cat $MEMORY_FILE)\nTASK: $TASK_DESC\nCRITERIA: $CRITERIA\nEOF\n\n" + executionBlock + "\n\n  read -p \"" + tOut('script_manual_check') + " \" RESULT\n\n  if [ \"$RESULT\" == \"y\" ]; then\n    echo \"✨ " + tOut('script_ask_success') + "\"\n    git add .\n    git commit -m \"" + tOut('git_task_commit') + " $TASK_ID\"\n    tmp=$(mktemp)\n    jq \"map(if .id == $TASK_ID then .passes = true else . end)\" $PRD_FILE > \"$tmp\" && mv \"$tmp\" $PRD_FILE\n    echo \"Iter $(date): " + tOut('script_complete') + " $TASK_ID\" >> $PROGRESS_FILE\n  else\n    echo \"❌ " + tOut('script_failed') + "\"\n    echo \"Iter $(date): Failed Task $TASK_ID\" >> $PROGRESS_FILE\n  fi\n  sleep 2\ndone\n";
+    const bashScript = "#!/bin/bash\n# " + tOut('sh_orchestrator_for') + " " + config.projectName + "\n# " + tOut('sh_optimized_for') + ": " + config.model + "\n# " + tOut('sh_cli_tool') + ": " + config.cliTool + "\n\n" +
+      "SCRIPT_DIR=\"$(cd \"$(dirname \"$0\")\" && pwd)\"\n" +
+      "PRD_FILE=\"$SCRIPT_DIR/prd.json\"\n" +
+      "MEMORY_FILE=\"$SCRIPT_DIR/agents.md\"\n" +
+      "PROGRESS_FILE=\"$SCRIPT_DIR/progress.txt\"\n" +
+      "SYS_PROMPT=\"$SCRIPT_DIR/system_instruction.txt\"\n\n" +
+      "if ! command -v jq &> /dev/null; then\n" +
+      "    echo \"" + tOut('sh_jq_req') + " " + (config.cliTool === CliTool.ANTIGRAVITY ? 'Add to dev.nix' : tOut('sh_install_it')) + "\"\n" +
+      "    exit 1\n" +
+      "fi\n\n" +
+      "if [ ! -f \"$PRD_FILE\" ]; then\n" +
+      "    echo \"Error: $PRD_FILE not found.\"\n" +
+      "    exit 1\n" +
+      "fi\n\n" +
+      "echo \"" + tOut('script_start') + " " + config.projectName + "...\"\n\n" +
+      "while true; do\n" +
+      "  # Correctly access .items array in prd.json\n" +
+      "  TASK_ID=$(jq -r '.items | map(select(.passes == false)) | .[0].id' \"$PRD_FILE\")\n" +
+      "  if [ \"$TASK_ID\" == \"null\" ] || [ -z \"$TASK_ID\" ]; then\n" +
+      "    echo \"✅ " + tOut('script_all_passed') + "\"\n" +
+      "    break\n" +
+      "  fi\n\n" +
+      "  TASK_DESC=$(jq -r \".items | map(select(.id == $TASK_ID)) | .[0].description\" \"$PRD_FILE\")\n" +
+      "  CRITERIA=$(jq -r \".items | map(select(.id == $TASK_ID)) | .[0].acceptance_criteria\" \"$PRD_FILE\")\n\n" +
+      "  echo \"---------------------------------------------------\"\n" +
+      "  echo \"🤖 " + tOut('script_working') + " #$TASK_ID\"\n" +
+      "  echo \"---------------------------------------------------\"\n\n" +
+      "  # Clean previous prompt components\n" +
+      "  [ -f \"$SYS_PROMPT\" ] && cat \"$SYS_PROMPT\" > input_prompt.txt || echo \"\" > input_prompt.txt\n" +
+      "  echo \"\" >> input_prompt.txt\n" +
+      "  CONTEXT_CONTENT=\"\"\n" +
+      "  [ -f \"$MEMORY_FILE\" ] && CONTEXT_CONTENT=$(cat \"$MEMORY_FILE\")\n" +
+      "  cat <<EOF >> input_prompt.txt\n" +
+      "CONTEXT: $CONTEXT_CONTENT\n" +
+      "TASK: $TASK_DESC\n" +
+      "CRITERIA: $CRITERIA\n" +
+      "EOF\n\n" +
+      executionBlock + "\n\n" +
+      "  read -p \"" + tOut('script_manual_check') + " \" RESULT\n\n" +
+      "  if [ \"$RESULT\" == \"y\" ]; then\n" +
+      "    echo \"✨ " + tOut('script_ask_success') + "\"\n" +
+      "    git add .\n" +
+      "    git commit -m \"" + tOut('git_task_commit') + " $TASK_ID\"\n" +
+      "    tmp=$(mktemp)\n" +
+      "    jq \".items |= map(if .id == $TASK_ID then .passes = true else . end)\" \"$PRD_FILE\" > \"$tmp\" && mv \"$tmp\" \"$PRD_FILE\"\n" +
+      "    echo \"Iter $(date): " + tOut('script_complete') + " $TASK_ID\" >> \"$PROGRESS_FILE\"\n" +
+      "  else\n" +
+      "    echo \"❌ " + tOut('script_failed') + "\"\n" +
+      "    echo \"Iter $(date): Failed Task $TASK_ID\" >> \"$PROGRESS_FILE\"\n" +
+      "  fi\n" +
+      "  sleep 2\n" +
+      "done\n";
 
     files.push({ filename: 'run_ralph.sh', language: 'bash', content: bashScript, description: tUi('desc_sh') });
   }
@@ -314,14 +365,16 @@ import os
 
 def generate():
     task = sys.argv[1] if len(sys.argv) > 1 else ""
-    goal = "${config.goal.replace(/"/g, '\\"')}"
-    context = ""
-    if os.path.exists('agents.md'):
-        with open('agents.md', 'r') as f: context = f.read()
+    goal = \"${config.goal.replace(/\"/g, '\\\"')}\"
+    context = \"\"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    agents_file = os.path.join(script_dir, 'agents.md')
+    if os.path.exists(agents_file):
+        with open(agents_file, 'r') as f: context = f.read()
     
-    prompt = f"Goal: {goal}\\n\\nContext:\\n{context}\\n\\nTask: {task}"
+    prompt = f\"Goal: {goal}\\n\\nContext:\\n{context}\\n\\nTask: {task}\"
     
-    model = "${modelId}"
+    model = \"${modelId}\"
     
     if "gemini" in model:
         payload = {

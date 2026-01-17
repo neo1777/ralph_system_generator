@@ -1,0 +1,20 @@
+{
+  "projectName": "techDoc_1777",
+  "version": "1.0.0",
+  "items": [
+    {
+      "id": 1,
+      "title": "Setup Progetto",
+      "description": "Inizializza la struttura per 'techDoc_1777'.",
+      "acceptance_criteria": "Struttura cartelle esistente con tutti i file",
+      "passes": false
+    },
+    {
+      "id": 2,
+      "title": "Implementazione Logica Core",
+      "description": "Implementa la logica business principale: **Richiesta: Applicazione Flutter per Generazione Automatica di Documentazione T...",
+      "acceptance_criteria": "Funzionalità core funziona come atteso",
+      "passes": false
+    }
+  ]
+}
