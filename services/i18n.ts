@@ -146,7 +146,7 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     sys_prompt_header: "You are Ralph, an AI development agent.",
     sys_prompt_project: "Project",
     sys_prompt_core_rules: "Core Rules",
-    sys_prompt_fresh: "Fresh Context - Read ALL files before each task",
+    sys_prompt_fresh: "Tabula Rasa (Fresh Context) - Read ALL files before each task",
     sys_prompt_atomic: "Atomic Changes - Small, verifiable commits",
     sys_prompt_compound: "Compound Verification - Test thoroughly",
     sys_prompt_verification: "Manual Verification - Wait for human approval",
@@ -310,10 +310,10 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     sys_prompt_header: "Sei Ralph, un agente AI di sviluppo.",
     sys_prompt_project: "Progetto",
     sys_prompt_core_rules: "Regole Core",
-    sys_prompt_fresh: "Contesto Fresco - Leggi TUTTI i file prima di ogni task",
-    sys_prompt_atomic: "Cambiamenti Atomici - Commit piccoli e verificabili",
-    sys_prompt_compound: "Verifica Composta - Testa approfonditamente",
-    sys_prompt_verification: "Verifica Manuale - Attendi approvazione umana",
+    sys_prompt_fresh: "Tabula Rasa (Contesto Fresco): Leggi TUTTI i file prima di ogni task",
+    sys_prompt_atomic: "Cambiamenti Atomici: Fai commit piccoli e verificabili",
+    sys_prompt_compound: "Verifica Composta: Testa approfonditamente ogni modifica",
+    sys_prompt_verification: "Verifica Manuale: Attendi approvazione umana prima di procedere",
     sys_goal_label: "Obiettivo",
     out_cost_file_desc: "Analisi Stima Costi Progetto",
     sys_model_label: "Modello",
@@ -389,7 +389,10 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     instr_workflow_title: "Workflow",
     instr_workflow_body: "Ralph itererà attraverso i task, chiamando il modello AI per ognuno."
   },
-  [AppLanguage.ES]: {},
+  [AppLanguage.ES]: {
+    prd_setup_title: "Configuración del Proyecto",
+    // Add other keys as needed, falling back to English for the rest via the loop below
+  },
   [AppLanguage.FR]: {},
   [AppLanguage.DE]: {},
   [AppLanguage.PT]: {},
@@ -399,7 +402,7 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
 
 // Fill missing languages with English fallback
 [AppLanguage.ES, AppLanguage.FR, AppLanguage.DE, AppLanguage.PT, AppLanguage.ZH, AppLanguage.JA].forEach(lang => {
-  uiDict[lang] = { ...uiDict[AppLanguage.EN] };
+  uiDict[lang] = { ...uiDict[AppLanguage.EN], ...uiDict[lang] };
 });
 
 export const getUiText = (lang: AppLanguage, key: TranslationKey): string =>

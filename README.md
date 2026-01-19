@@ -6,9 +6,9 @@ Questa applicazione permette agli sviluppatori di generare configurazioni pronte
 
 ## 🚀 Caratteristiche Principali
 
-*   **Generazione Istantanea:** Crea automaticamente la struttura di file necessaria (`prd.json`, `agents.md`, `INSTRUCTIONS.md`, script di orchestrazione).
+*   **Generazione Istantanea:** Crea automaticamente la struttura di file necessaria (`prd.json` formattato, `agents.md`, `INSTRUCTIONS.md`, script di orchestrazione).
 *   **Catalogo Preset Internazionalizzato (Nuovo):** Include 20 template pronti all'uso (Siti Web, Flutter, Backend Go, Python Data). **Tutto il contenuto dei preset**, inclusi i prompt, le descrizioni e persino i file di mock (codice legacy commentato, README.md simulati), viene tradotto automaticamente in base alla lingua dell'interfaccia scelta (Default: Italiano).
-*   **Supporto Multi-Modello (Jan 2026):** Configurazioni ottimizzate per **Google Gemini 3 Pro/Flash**, **Claude 4.5 Opus/Sonnet/Haiku**, **OpenAI GPT-5.2 Pro/Codex** e modelli all'avanguardia (**DeepSeek V4/R1**, Llama 4). Supporto nativo per **Mistral 3 AI**, **Cohere Command R+** e **Groq**.
+*   **Supporto Multi-Modello (Jan 2026):** Configurazioni ottimizzate per **Claude 4.5 Sonnet (Default)**, **Google Gemini 3 Pro/Flash**, **OpenAI GPT-5.2 Pro/Codex** e modelli all'avanguardia (**DeepSeek V4/R1**, Llama 4). Supporto nativo per **Mistral 3 AI**, **Cohere Command R+** e **Groq**.
 *   **Stima dei Costi Integrata (Nuovo):** Genera automaticamente un file `COSTS.md` con il calcolo dei costi stimati per il modello selezionato (Input/Output per 1M token), basato sui prezzi pubblici aggiornati a Gennaio 2026.
 *   **Contesto Avanzato con Upload:** Carica file di testo (es. documentazione, snippet di codice) e immagini (es. mockup UI) direttamente nel contesto iniziale. I file di testo vengono formattati in `agents.md` con delimitatori chiari, le immagini salvate nella cartella `assets/`.
 *   **Mock Data Injection:** I preset includono automaticamente file "simulati" (codice legacy sporco, wireframe SVG, log di errori) per permetterti di testare immediatamente le capacità dell'agente.

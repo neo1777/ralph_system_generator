@@ -50,7 +50,7 @@ Il sistema di preset è stato potenziato per supportare una localizzazione profo
 ### 3.3 Logica di Generazione ("The Ralph Logic")
 
 #### 3.3.1 File Generati
-Oltre a `prd.json`, `agents.md` e `INSTRUCTIONS.md`, il sistema ora produce:
+Oltre a `prd.json` (strutturata come Oggetto `{ items: [] }`), `agents.md` e `INSTRUCTIONS.md`, il sistema ora produce:
 *   **`agents.md` (Arricchito):** Contiene sezioni `--- FILE: [nome] ---` con il contenuto dei file di testo caricati e riferimenti alle immagini. Include istruzioni "Dev Browser" se abilitate.
 *   **`assets/` (Directory):** Contiene i file immagine fisici (PNG/JPG) caricati dall'utente o iniettati dai preset.
 *   **`ralph_tui.py` (Robusto):** Include funzioni `load_prd` e `save_prd` con gestione esplicita di `JSONDecodeError`, `FileNotFoundError` e `PermissionError`. Fornisce feedback visivo (colori) sullo stato delle operazioni.

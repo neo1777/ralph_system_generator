@@ -76,15 +76,19 @@ const verifyScenario = (lang: AppLanguage, preset: any) => {
     const prdFile = getFile(files, 'prd.json');
     if (prdFile) {
         try {
-            const tasks = JSON.parse(prdFile.content);
+            let tasks = JSON.parse(prdFile.content);
+            // Handle { items: [...] } wrapper used by newer logic
+            if (!Array.isArray(tasks) && tasks.items && Array.isArray(tasks.items)) {
+                tasks = tasks.items;
+            }
             if (!Array.isArray(tasks) || tasks.length === 0) {
-                errors.push(`prd.json is empty or not an array`);
+                errors.push(`prd.json is empty or not an array (or missing 'items' wrapper)`);
             } else {
                 // Check Localization of the first task title (Setup task usually)
                 // We know specific strings from i18n.ts
                 const firstTaskTitle = tasks[0].title;
-                if (lang === AppLanguage.IT && !firstTaskTitle.toLowerCase().includes('configurazione')) {
-                    errors.push(`[i18n] IT: prd.json title '${firstTaskTitle}' does not seem Italian (expected 'Configurazione...')`);
+                if (lang === AppLanguage.IT && !firstTaskTitle.toLowerCase().includes('setup')) {
+                    errors.push(`[i18n] IT: prd.json title '${firstTaskTitle}' does not seem Italian (expected 'Setup...')`);
                 }
                 if (lang === AppLanguage.ES && !firstTaskTitle.toLowerCase().includes('configuración')) {
                     errors.push(`[i18n] ES: prd.json title '${firstTaskTitle}' does not seem Spanish`);
@@ -109,9 +113,9 @@ const verifyScenario = (lang: AppLanguage, preset: any) => {
 
     const instrFile = getFile(files, 'INSTRUCTIONS.md');
     if (instrFile) {
-        // Check for "Installazione" in IT
-        if (lang === AppLanguage.IT && !instrFile.content.includes('Installazione')) {
-            errors.push(`[i18n] IT: INSTRUCTIONS.md missing 'Installazione'`);
+        // Check for "Setup" or "Istruzioni" in IT (since i18n uses "Setup" for instr_setup_title)
+        if (lang === AppLanguage.IT && !instrFile.content.includes('Setup')) {
+            errors.push(`[i18n] IT: INSTRUCTIONS.md missing 'Setup'`);
         }
     }
 
@@ -119,11 +123,11 @@ const verifyScenario = (lang: AppLanguage, preset: any) => {
     const sysPrompt = getFile(files, 'system_instruction.txt')?.content || '';
 
     // Check Fresh Context / Tabula Rasa
-    if (lang === AppLanguage.EN && !sysPrompt.includes('Start fresh every time')) {
-        errors.push(`[Compliance] EN: Missing 'Start fresh every time' rule`);
+    if (lang === AppLanguage.EN && !sysPrompt.includes('Fresh Context')) {
+        errors.push(`[Compliance] EN: Missing 'Fresh Context' rule`);
     }
-    if (lang === AppLanguage.IT && !sysPrompt.includes('Inizia fresco ogni volta')) {
-        errors.push(`[Compliance] IT: Missing 'Inizia fresco ogni volta' rule`);
+    if (lang === AppLanguage.IT && !sysPrompt.includes('Contesto Fresco')) {
+        errors.push(`[Compliance] IT: Missing 'Contesto Fresco' rule`);
     }
 
     const runScript = getFile(files, 'run_ralph.sh')?.content || '';

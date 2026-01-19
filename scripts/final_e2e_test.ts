@@ -73,8 +73,9 @@ async function run() {
     console.log(`\n[3/5] Mocking Agent execution...`);
     let scriptContent = fs.readFileSync('run_ralph.sh', 'utf-8');
     // Replace the call line
+    // Matches: OUTPUT=$(cat input_prompt.txt | gemini) OR OUTPUT=$(gemini ...)
     scriptContent = scriptContent.replace(
-        /OUTPUT=\$\(gemini run .*?\)/,
+        /OUTPUT=\$\(.*gemini.*?\)/,
         'OUTPUT="MOCK_AGENT: I have completed the task successfully. Here is the code..."'
     );
     fs.writeFileSync('run_ralph.sh', scriptContent);
@@ -104,12 +105,14 @@ async function run() {
     const gitLog = execSync('git log --oneline').toString();
     console.log(`Git Log Sample:\n${gitLog}`);
 
-    if (!gitLog.includes('Ralph: Completed Task')) {
+    if (!gitLog.includes('Complete task')) {
         throw new Error('E2E FAIL: No completion commits found in git log.');
     }
 
     // Check PRD updated
-    const prd = JSON.parse(fs.readFileSync('prd.json', 'utf-8'));
+    let prd = JSON.parse(fs.readFileSync('prd.json', 'utf-8'));
+    if (!Array.isArray(prd) && prd.items) prd = prd.items;
+
     const allPassed = prd.every((t: any) => t.passes === true);
 
     if (!allPassed) {

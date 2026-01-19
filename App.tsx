@@ -28,9 +28,9 @@ export default function App() {
     return {
       projectName: 'MyRalphApp',
       goal: 'Create a Todo List app with React and LocalStorage',
-      model: AiModel.GOOGLE_GEMINI_3_PRO,
+      model: AiModel.CLAUDE_4_5_SONNET,
       interfaceType: InterfaceType.BASH_BASIC,
-      cliTool: CliTool.MANUAL,
+      cliTool: CliTool.CLAUDE_CLI,
       includeDevBrowser: true,
       uiLanguage: initialLang,
       outputLanguage: initialLang,
