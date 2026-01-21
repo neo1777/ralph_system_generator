@@ -1,0 +1,143 @@
+# Additional Resources
+
+## NPM Packages
+- `ralph-loop-agent` (Vercel Labs)
+- `@asidorenkocodeppi/ralph-tui`
+
+## Cargo (Rust) Crates
+- `ralph-tui`
+- `ralph-proto`
+
+## Articles & Links
+- [^1_100]: https://ieeexplore.ieee.org/document/11024256/
+- [^1_101]: https://www.semanticscholar.org/paper/f5ad1d0d91c0df58637b0d7bc3b5ecd3ab915fa1
+- [^1_102]: https://www.semanticscholar.org/paper/8dc56156abb50605f83cafc71fdbdb9102c02f84
+- [^1_103]: https://www.semanticscholar.org/paper/dc8ded222cb71357c3a69f4bed057b1bca1beccd
+- [^1_104]: https://al-kindipublisher.com/index.php/jcsts/article/view/11590
+- [^1_105]: https://www.semanticscholar.org/paper/4a38e64f6bebddef8b5a833f26f8a20f7c4c75ce
+- [^1_106]: https://arxiv.org/abs/2411.11532
+- [^1_107]: https://arxiv.org/pdf/2402.16667.pdf
+- [^1_108]: http://arxiv.org/pdf/2409.14341.pdf
+- [^1_109]: https://arxiv.org/pdf/2210.13708.pdf
+- [^1_110]: https://arxiv.org/pdf/2503.02950.pdf
+- [^1_111]: http://arxiv.org/pdf/2112.07013.pdf
+- [^1_112]: https://arxiv.org/html/2502.20065v1
+- [^1_113]: https://arxiv.org/pdf/2303.02182.pdf
+- [^1_114]: https://arxiv.org/html/2503.01619v1
+- [^1_115]: https://ghuntley.com/agent/
+- [^1_116]: https://www.nibzard.com/agentic-handbook/
+- [^1_118]: https://arxiv.org/abs/2511.20719
+- [^1_119]: https://arxiv.org/abs/2506.13068
+- [^1_120]: https://arxiv.org/abs/2505.18946
+- [^1_121]: https://arxiv.org/abs/2511.18258
+- [^1_122]: https://www.semanticscholar.org/paper/4d6da92b0935999159a75b4f303a2886c7315943
+- [^1_123]: https://arxiv.org/html/2407.12532
+- [^1_124]: http://arxiv.org/pdf/2412.05449.pdf
+- [^1_125]: https://arxiv.org/pdf/2501.06322.pdf
+- [^1_126]: https://arxiv.org/html/2504.04850v1
+- [^1_127]: https://arxiv.org/pdf/2308.10721.pdf
+- [^1_128]: https://arxiv.org/pdf/2312.15674.pdf
+- [^1_129]: https://arxiv.org/pdf/2502.14743.pdf
+- [^1_12]: https://lib.rs/crates/ralph-tui
+- [^1_130]: https://arxiv.org/html/2504.00587v1
+- [^1_131]: https://palark.com/blog/gitea-to-gitlab-migration/
+- [^1_132]: https://arxiv.org/html/2509.08312v1
+- [^1_133]: https://www.youtube.com/watch?v=dgIhjx1b2p0
+- [^1_134]: https://arxiv.org/pdf/2507.19854.pdf
+- [^1_135]: https://www.arxiv.org/pdf/2601.13671.pdf
+- [^1_136]: https://docs.gitlab.com/user/import/gitea/
+- [^1_137]: https://arxiv.org/html/2511.17656v1
+- [^1_138]: https://www.arxiv.org/abs/2508.01531
+- [^1_14]: https://www.youtube.com/watch?v=T_JfTji3xfc
+- [^1_16]: https://www.reddit.com/r/AIcodingProfessionals/comments/1qgzwtz/awesomeralph_a_curated_list_of_resources_about/
+- [^1_17]: https://libraries.io/npm/@asidorenkocodeppi%2Fralph-tui
+- [^1_18]: https://www.npmjs.com/package/@asidorenkocodeppi%2Fralph-tui
+- [^1_19]: https://lib.rs/crates/ralph-proto
+- [^1_1]: https://www.alibabacloud.com/blog/from-react-to-ralph-loop-a-continuous-iteration-paradigm-for-ai-agents_602799
+- [^1_20]: https://pypi.org/project/ralph/2.0.0-rc7/
+- [^1_21]: https://www.youtube.com/watch?v=yi4XNKcUS8Q
+- [^1_22]: https://www.youtube.com/watch?v=3wwZB4GKM5o
+- [^1_23]: https://www.youtube.com/watch?v=2ItHHAKO4T0
+- [^1_24]: https://ralph-wiggum.ai
+- [^1_25]: https://ralph-tui.com
+- [^1_26]: https://awesomeclaude.ai/ralph-wiggum
+- [^1_27]: https://awesomeclaude.ai
+- [^1_29]: https://arxiv.org/abs/2508.10146
+- [^1_2]: http://www.zerosync.co/blog/ralph-loop-technical-deep-dive
+- [^1_30]: https://arxiv.org/html/2601.13671v1
+- [^1_31]: https://arxiv.org/abs/2504.16902
+- [^1_32]: https://arxiv.org/html/2510.16572v1
+- [^1_33]: https://arxiv.org/abs/2510.14133
+- [^1_34]: https://arxiv.org/abs/2506.04133
+- [^1_35]: https://arxiv.org/abs/2502.14743
+- [^1_36]: https://arxiv.org/abs/2506.18096
+- [^1_37]: https://arxiv.org/html/2502.15212v1
+- [^1_38]: https://arxiv.org/pdf/2510.09244.pdf
+- [^1_39]: https://arxiv.org/html/2503.12687v1
+- [^1_3]: https://ghuntley.com/ralph/
+- [^1_40]: https://arxiv.org/html/2508.13143v1
+- [^1_41]: https://www.semanticscholar.org/paper/725bb3e5b9d1afe2e01fbee7fd263f6038ebef65
+- [^1_42]: https://arxiv.org/abs/2509.08088
+- [^1_43]: https://arxiv.org/abs/2507.16044
+- [^1_44]: https://s-rsa.com/index.php/agi/article/view/16169
+- [^1_45]: https://arxiv.org/abs/2509.05941
+- [^1_46]: https://ices-library.figshare.com/articles/_/18621701
+- [^1_47]: https://arxiv.org/abs/2507.00014
+- [^1_48]: https://www.frontiersin.org/articles/10.3389/frai.2025.1644084/full
+- [^1_49]: https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cpz1.1054
+- [^1_50]: https://ieeexplore.ieee.org/document/9004928/
+- [^1_51]: https://arxiv.org/html/2502.01822v1
+- [^1_52]: https://arxiv.org/html/2405.15019v2
+- [^1_53]: https://arxiv.org/pdf/2311.10751.pdf
+- [^1_54]: https://arxiv.org/html/2412.17029v1
+- [^1_55]: https://arxiv.org/html/2410.08164
+- [^1_56]: https://arxiv.org/pdf/2309.07870.pdf
+- [^1_57]: https://arxiv.org/html/2503.18102v1
+- [^1_58]: https://arxiv.org/pdf/2501.17167.pdf
+- [^1_59]: https://www.chrismdp.com/your-agent-orchestrator-is-too-clever/
+- [^1_60]: https://block.github.io/goose/docs/tutorials/ralph-loop/
+- [^1_61]: https://blog.devgenius.io/a-solid-hassle-free-ralph-wiggum-workflow-you-can-try-now-b76c8cd25202
+- [^1_62]: https://dev.to/alexandergekov/2026-the-year-of-the-ralph-loop-agent-1gkj
+- [^1_64]: https://blog.forgen.ai/when-one-ai-isnt-enough-the-multi-agent-systems-playbook-29f72dca4251
+- [^1_65]: https://www.linkedin.com/posts/jonvargas_just-let-it-run-forever-five-words-that-activity-7416955350819512320-lbOy
+- [^1_66]: https://arxiv.org/abs/2502.11705
+- [^1_67]: https://ieeexplore.ieee.org/document/10590311/
+- [^1_68]: https://arxiv.org/abs/2505.20184
+- [^1_69]: https://arxiv.org/abs/2401.07255
+- [^1_6]: https://deepwiki.com/vercel-labs/ralph-loop-agent
+- [^1_70]: https://arxiv.org/html/2403.17927v1
+- [^1_71]: https://arxiv.org/pdf/2312.17294.pdf
+- [^1_72]: https://arxiv.org/pdf/1701.04079.pdf
+- [^1_73]: https://arxiv.org/pdf/2410.06153.pdf
+- [^1_74]: https://arxiv.org/pdf/2408.08435.pdf
+- [^1_75]: https://arxiv.org/html/2508.10146v1
+- [^1_76]: https://cora.ucc.ie/bitstreams/4f9ba0a6-4b6d-4a15-8dbb-507efa1c3626/download
+- [^1_77]: https://www.ijsrtjournal.com/article/Systematic+Comparison+of+Agentic+AI+Frameworks+for+Scholarly+Literature+Processing
+- [^1_78]: https://www.reddit.com/r/LLM/comments/1qdla5w/wtf_is_a_ralph_loop_best_ai_coding_agent_ever/
+- [^1_79]: https://dev.to/prefrontalsys/memento-for-ai-agents-why-tattooed-ralph-is-the-future-of-coding-1674
+- [^1_80]: https://www.reddit.com/r/selfhosted/comments/p1fikz/selfhosted_open_source_alternative_to_githubgitlab/
+- [^1_81]: https://www.techrxiv.org/users/913189/articles/1289879/master/file/data/A2A/A2A.pdf?inline=true
+- [^1_82]: http://biorxiv.org/lookup/doi/10.1101/474957
+- [^1_83]: https://www.semanticscholar.org/paper/c6eeb56107737a5aeb9872c6796bbddae0d683d2
+- [^1_84]: http://biorxiv.org/lookup/doi/10.1101/2023.07.25.550520
+- [^1_85]: https://up-j-gemgem.ubiquityjournal.website/articles/16
+- [^1_86]: https://www.semanticscholar.org/paper/55b6dace81b7e398f99df2b780a18e3b588f8eab
+- [^1_87]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9438954/
+- [^1_88]: https://arxiv.org/abs/2212.04981
+- [^1_89]: http://arxiv.org/pdf/2208.05605.pdf
+- [^1_90]: https://arxiv.org/html/2504.04466v2
+- [^1_91]: https://arxiv.org/abs/2305.04002
+- [^1_92]: http://arxiv.org/abs/1907.13071
+- [^1_93]: https://arxiv.org/html/2407.15304v1
+- [^1_94]: http://arxiv.org/pdf/0912.5515.pdf
+- [^1_95]: https://blog.devgenius.io/ralph-wiggum-explained-the-claude-code-loop-that-keeps-going-3250dcc30809
+- [^1_96]: https://x.com/ghumare64/status/2013656958666969164
+- [^1_97]: https://www.humanlayer.dev/blog/brief-history-of-ralph
+- [^1_98]: https://www.ishir.com/blog/312751/ralph-wiggum-and-ai-coding-loops-from-springfield-to-real-world-software-automation.htm
+- [^1_99]: https://pasqualepillitteri.it/news/126/ralph-wiggum-claude-code-loop-bash-coding-agent
+- <img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+## Videos
+- Ralph Mode for Deep Agents: https://www.youtube.com/watch?v=yi4XNKcUS8Q
+- Ralph Wiggum Loop Explained: https://www.youtube.com/watch?v=T_JfTji3xfc
+- WTF is a Ralph Loop?: https://www.youtube.com/watch?v=2ItHHAKO4T0

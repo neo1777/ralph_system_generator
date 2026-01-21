@@ -13,6 +13,7 @@ type TranslationKey =
   | 'err_zip' | 'group_google' | 'group_anthropic' | 'group_openai' | 'group_deepseek' | 'placeholder_project'
   | 'desc_nix' | 'desc_instructions' | 'desc_prd' | 'desc_agents' | 'desc_progress'
   | 'desc_sys_prompt' | 'desc_tui' | 'desc_sh' | 'desc_ctx_img'
+  | 'desc_plan' | 'desc_build' | 'desc_impl_plan' | 'desc_llm_review'
   | 'iface_bash' | 'iface_tui'
   | 'sys_model_label' | 'sys_goal_label'
   | 'tool_manual' | 'tool_antigravity' | 'tool_gemini' | 'tool_claude' | 'tool_openai' | 'tool_ollama' | 'tool_curl'
@@ -126,6 +127,10 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     desc_tui: "Terminal UI Script",
     desc_sh: "Orchestration Script",
     desc_ctx_img: "Context Image",
+    desc_plan: "Planning Mode Instructions",
+    desc_build: "Building Mode Instructions",
+    desc_impl_plan: "Project state and prioritized tasks",
+    desc_llm_review: "LLM-as-Judge evaluation scaffold",
     // Output keys
     prd_setup_title: "Project Setup",
     prd_setup_desc: "Initialize project structure for",
@@ -291,6 +296,10 @@ const uiDict: Record<AppLanguage, Record<string, string>> = {
     desc_tui: "Script Interfaccia Terminale",
     desc_sh: "Script Orchestrazione",
     desc_ctx_img: "Immagine Contesto",
+    desc_plan: "Istruzioni Modalità Pianificazione",
+    desc_build: "Istruzioni Modalità Costruzione",
+    desc_impl_plan: "Stato progetto e task prioritari",
+    desc_llm_review: "Scaffold valutazione LLM-as-Judge",
     prd_setup_title: "Setup Progetto",
     prd_setup_desc: "Inizializza la struttura per",
     prd_criteria_setup: "Struttura cartelle esistente con tutti i file",
